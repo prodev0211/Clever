@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clever Apllies</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+</head>
+<body>  
+    <nav ><img src="https://media.licdn.com/dms/image/v2/D4D03AQGJBaKJasL3_A/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1712759113208?e=1756944000&v=beta&t=Ufapu7OJ_eS_f0xooc-83NtZ81q74-Zh2ee53-yCJWg" alt=""><div class="nav-left">
+        DONG N.</div></nav>
+    <header>
+        
+        <h2>Candidate Information </h2>
+        <h3>Candidate Name: </h3><p> Nguyen Thanh Dong</p>
+        <h3>Role Apllying: </h3> <p>Customer Technical Support Engineer</p>
+        <h3>Submission Date:</h3>30/6/2025
+    </header>
+    <div class="body-answer">
+        <div class="question question1">
+            <h3>Question 1: A customer reports their PayID transaction shows as “completed” on their banking app but is not
+reflected in our merchant system</h3>
+            <ul>
+                <li>Step 1:</li>
+                <p>Ask for customer information(Transaction ID,PayID, date/time, amount)
+                </p>
+                <li>Step 2:</li>
+                <p>Check Payment Gateway Logs </p>
+                <li>Step 3:</li>
+                <p>Check API calls: (Confirm webhook success/failure)</p>
+                <li>Step 4:</li>
+                <p>Check Database(Check table Make sure the transaction match with ID, PayID,date/time, amount)</p>
+                <li>Step 5:</li>
+                <p>Check Merchant Integration Logs Validate that the merchant's webhook URL responded successfully (e.g., HTTP 200).</p>
+                <li>Step:6:Confirm with Internal Monitoring or Alerts(Check for incidents or errors)</li>
+                <li>🛠️ Logs & Tools to Check: (step2 using Kibana / CloudWatch ; step3 using API Gateway Logs;step4 : SQL / Admin Dashboard;step5 using Webhook Logs / API),step6 using Grafana / PagerDuty</li>
+                
+            </ul>
+            <div class="email">
+                <div class="top"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
+                Customer response email explaining the situation 
+                </div>
+                <div class="bottom">
+                    <div class="">Subject: Update Regarding Your PayID Transaction Issue</div>
+                    <div class="">Dear [Customer Name],</div>
+                    <div>Thank you for contacting us about your recent PayID transaction. I understand how important this matter is and I’m here to help.</div>
+                    <div>We’ve reviewed our systems and the transaction appears to have been marked as "completed" by your bank, but we have not yet received a corresponding confirmation on our end. This can occur if the payment gateway did not forward the confirmation to us successfully or if there was a delay in the webhook delivery.
+
+Here’s what we’re currently doing:</div>
+                    <ul>
+                        <li>Investigating backend logs and verifying whether the payment was processed by our payment gateway.
+
+</li>
+                        <li>Reviewing webhook delivery records to ensure your transaction was forwarded to the correct merchant system.</li>
+                        <li>Coordinating with our payment processor for additional verification if required.</li>
+                    </ul>
+                    <div>In the meantime, please help us with the following details to speed up our investigation:</div>
+                    <ul>
+                        <li>PayID used</li>
+                        <li>Date and time of the transaction</li>
+                        <li>Exact amount</li>
+                    </ul>
+                    <div>We appreciate your patience while we work on resolving this. We’ll provide an update within the next [2–4 hours] or sooner once we have more information.</div>
+                    <div>Best regards, DONG NGUYEN</div>
+                    <div>Customer Technical Support Engineer, Hello Clever </div>
+                    <div>+84346886218|dongbeo99@outlook.com</div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="question question2">
+            <h3>Question 2: A merchant reports that a customer’s contact creation keeps failing with a 422
+Unprocessable Entity error</h3>
+            <div>Potential reasons for the 422 error based on API best practices: </div>
+            <ul>
+                <li>Missing Required Fields</li>
+                <li>Invalid Field Format</li>
+                <li>Field Constraint Violation</li>
+                <li>Duplicate Resource</li>
+                <li>Incorrect Data Types</li>
+                <li>Extra/Unknown Fields</li>
+               
+            </ul>
+            <div>Same example of a corrected payload.</div>
+            <div style="padding: 3px 5px ;border: 1px solid black;width:30px">.json </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:300px">
+                <div>{</div>
+                <div> "full_name": "",</div>
+                <div>   "email": "not-an-email",</div><
+                <div>metadata": "should-be-an-object"</div>
+                <div>}</div>
+            </div>
+            <div>To This
+                <div style="padding: 3px 5px ;border: 1px solid black;width:30px">.json </div>
+                <div style="background-color: black;color: violet;padding: 10px 20px ;width:300px">
+                <div>{</div>
+                <div> "full_name": "Dong N",</div>
+                <div>   "email": "dongbeo99@outlook.com,</div><
+                <div>"phone": "+61412345678",</div>
+                <div> "metadata": {</div>
+                <div>"source": "web-form",</div>
+                <div>  "campaign": "EOFY2025"</div>
+                <div>}</div>
+                <div>}</div>
+            </div>
+            <div> Communicate with the merchant, including
+suggested fixes. </div>
+                <div>Subject: Assistance with 422 Error on Contact Creation API</div>
+                <div>Dear [Merchant Name],</div>
+                <div>Thank you for reaching out regarding the issue with creating a customer contact via the API.</div>
+                <div>The 422 Unprocessable Entity error generally means that while the request format is syntactically correct, some of the submitted data does not meet the API’s validation requirements. This often includes:</div>
+                <ul>
+                    <li>Missing or empty required fields (e.g., full_name, email, phone)</li>
+                    <li>Invalid email format (e.g., missing @ symbol)</li>
+                    <li>Exceeding max character length (e.g., phone numbers or metadata)</li>
+                    <li>Incorrect data types (e.g., metadata should be an object, not a string)</li>
+                </ul>
+                <div>We recommend double-checking the data you're sending, particularly:</div>
+                <ul>
+                    <li>Ensuring all required fields are present and non-empty</li>
+                    <li>Verifying that the formats and types match our [API documentation]</li>
+                </ul>
+                <div>If the issue persists, please send us:</div>
+                <ul>
+                    <li>A redacted version of your current payload</li>
+                    <li>Timestamp of the failed attempt</li>
+                    <li>Any relevant request IDs or logs</li>
+                </ul>
+                <div>We’re happy to help you validate and resolve this quickly.</div>
+                <div>Best regards, DONG NGUYEN</div>
+                <div>Customer Technical Support Engineer, Hello Clever </div>
+                <div>+84346886218|dongbeo99@outlook.com</div>
+            </div>
+            
+                
+        </div>
+        <div class="question question3">
+            <h3>Question3 :A recurring user reports that subscription billing is inconsistent – sometimes
+charged twice, sometimes not charged at all.</h3>
+            <ul>
+                <li>Step 1:</li>
+                <p>Check Subscription Metadata
+                </p>
+                <li>Step 2:</li>
+                <p>Validate Idempotency Usage </p>
+                <li>Step 3:</li>
+                <p>Review Billing Job or Cron Scheduler</p>
+                <li>Step 4:</li>
+                <p>Inspect Payment Gateway Behavior</p>
+                <li>Step 5:</li>
+                <p>Database Check</p>
+                <li>Step:6:</li>
+                <p>Check Webhooks and Retry Logic:</p>
+            </ul>
+            <div>Communicate to dev team</div>
+            <div>“Quick update — a recurring user is experiencing inconsistent subscription billing. In the logs, I’m seeing:</div>
+            <ul>
+                <li>Duplicate charges on retry with no idempotency key</li>
+                <li>Missed billing windows where cron jobs either didn’t fire or failed silently</li>
+            </ul>
+            <div>I think we should double-check the billing task locking mechanism and enforce idempotency for charge creation. Also worth validating that webhook or retry logic isn’t causing duplicate entries.</div>
+            <p></p>
+            <div>Communicate to user</div>
+            <div>“Thanks for flagging this — I completely understand how frustrating inconsistent billing can be. Let me walk you through what we're doing to fix it.
+
+We’ve seen cases where either a double charge happens because of a retry logic error or sometimes no charge happens because a scheduled billing task didn't run as expected. We’re looking into the logs for your account specifically to confirm which one it is.”
+</div>
+            <div>(After checking logs)</div>
+            <div>
+It looks like last month your payment was processed twice within a few seconds. That usually happens when our system retries a payment without confirming the previous one went through. This could be because of a network hiccup or timeout from the payment gateway. We’ll make sure any extra charge is refunded and this doesn't happen again.
+
+We’re now also checking if any scheduled billing runs may have failed, causing missed charges. If that’s the case, we’ll notify you before retrying anything manually. In the meantime, no need to worry — we’ll handle it for you.</div>
+        </div>
+        <div class="question question4">
+            <h3>Question4 :</h3>
+            <div>Hello Clever use API keys and OAuth 2.0 for authentication</div>
+            <div>API Keys</div>
+            <div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>curl -X GET https://api-merchant.helloclever.co \</div>
+                <div>  -H "Authorization: Bearer sk_test_abcdef1234567890" 
+                <div>   -H "Content-Type: application/json",</div>
+                <div></div>
+            </div>
+            </div>
+            <div>OAuth 2.0</div>
+            <div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>curl -X GET https://api-merchant.helloclever.co \</div>
+                <div>     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+                <div>   -H "Content-Type: application/json"</div>
+                <div></div>
+        </div>
+        </div>
+        <div class="question question5">
+            <h3>Question5 :</h3>
+            <div>Base API URLs:</div><a href=" https://api-merchant.helloclever.co" style="text-decoration: none;">https://api-merchant.helloclever.co</a></div>
+            <div>Sandbox environments: </div><a href="https://api.cleverhub.co">https://api.cleverhub.co</a>
+            <div>Use postman Evironment</div>]
+            <div>1.Create Two Environments: </div>
+            <ul>
+                <ul>Production:
+                    <li>base_url = https://api-merchant.helloclever.co</li>
+                    <li>app_id = your_production_app_id</li>
+                    <li>secret_key = your_production_secret</li>
+                </ul>
+                <ul>Sandbox:
+                    <li>base_url = https://api.cleverhub.co</li>
+                    <li>app_id = your_sandbox_app_id</li>
+                    <li>secret_key = your_sandbox_secret</li>
+                </ul>
+            </ul>
+            <div>2.Update Your Request URLs to Use Variables:</div>
+            <div>use {{base_url}}/contacts</div>
+            <div>3.Use Environment-Specific Variables for Headers:</div>
+            <div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>X-App-Id: {{app_id}}</div>
+                <div>   X-Secret-Key: {{secret_key}}
+                <div>  Content-Type: application/json</div>
+                <div></div>
+        </div>
+        </div>
+        <div>Finally</div>
+        <div>Use the environment dropdown in Postman to toggle between Production and Sandbox.
+
+</div>
+        <div class="question question6">
+            <h3>Question 6:</h3>
+            <div>Payin API</div>
+            <ul>
+                <li>200: Payment created and processing.</li>
+                <li>400: Payload missing amount or currency.
+
+</li>
+                <li>422: PayID format is invalid.</li>
+                <li>401: API key missing or expired.</li>
+                <li>500: Downstream payment gateway error.</li>
+            </ul>
+            <div>Contact API</div>
+            <ul>
+                <li>200: Contact retrieved/created successfully.</li>
+                <li>400: Missing required fields .</li>
+                <li>422: Email or phone format is invalid.</li>
+                <li>401: Invalid credentials.
+
+</li>
+                <li>500: DB issue or app crash during save.</li>
+            </ul>
+            <div> Refund API</div>
+            <ul>
+                <li>200: Refund processed.</li>
+                <li>400: Refund amount exceeds original transaction.
+
+</li>
+                <li>422: Refund reason field invalid or empty.</li>
+                <li>401: Unauthorized access to refund endpoint.</li>
+                <li>500: Refund service timeout or internal exception.</li>
+            </ul>
+        </div>
+        <div class="question question7">
+            <h3>Question 7:</h3>
+            <div>1.Troubleshoot the issue using the GET /api/v2/
+balances/detail endpoint. </div>
+            <div>-Query the Balance Details Endpoint:</div>
+            <div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>GET /api/v2/balances/detail?currency=JPY</div>
+                <div>  Authorization: Bearer {{access_token}}
+                <div></div>
+        </div>
+        </div>
+        <div>-Inspect the Response Fields:</div>
+        <ul>
+            <li>available_balance</li>
+            <li>pending_balance
+
+</li>
+            <li>withdrawable_balance
+
+</li>
+            <li>currency</li>
+        </ul>
+        <div>-Check Timestamps:</div>
+        <div>-Validate Settlement Schedule:</div>
+        <li>Review whether Hello Clever’s JPY payouts follow a T+1 or T+2 delay for settlement.
+
+</li>
+<li>Check for holidays or weekends that may delay clearing</li>
+        <div>Possible Causes for Zero Withdrawable Balance</div>
+        <ul>
+            <li>Settlement Delay. explan: Payments are in a pending or clearing state and not yet marked as withdrawable.
+</li>
+            <li>Currency-Specific Settlement Rules.explan:JPY may have specific rules (e.g., longer hold period than AUD or USD).</li>
+            <li>Timezone Cutoff	. explan: 	If payments came in after local bank cutoff, they’re counted for the next business day.</li>
+            <li>Compliance or Risk Hold	. explan: A fraud or verification flag could temporarily hold funds.
+</li>
+            <li>Incorrect Currency Selected. explan: The merchant may be checking JPY while the payments were settled in a different currency.
+
+</li>
+        </ul>
+        <div>Sample API Resquest and Response</div>
+        <div>Resquest</div>
+        <div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>curl -X GET "https://api-merchant.helloclever.co/api/v2/balances/detail?currency=JPY" \</div>
+                <div>  -H "Authorization: Bearer sk_live_abcdef1234567890" \
+                <div>   -H "Content-Type: application/json"</div>
+                <div></div>
+            </div>
+            </div>
+            <div>Respond</div>
+            <div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>{</div>
+                <div>   "currency": "JPY",
+                <div>     "available_balance": 100,</div>
+                <div>  "pending_balance": 100,</div>
+                <div>  "withdrawable_balance": 0,</div>
+                <div>  "last_settlement_date": "2025-06-29T14:00:00Z",</div>
+                <div>  "next_settlement_date": "2025-07-01T02:00:00Z",
+</div>
+<div>  "settlement_delay": "T+1"
+</div>
+<div>}</div>
+            </div>
+            </div>
+            <div> Customer-Facing Explanation</div>
+            <div>Hi [Merchant Name], thanks for reaching out — I understand you’re seeing a zero withdrawable balance in JPY, even after receiving payments yesterday.</div>
+            <div>I’ve checked your account using the /balances/detail endpoint, and here’s what’s happening:</div>
+            <ul>
+                <li>The payments from yesterday were successfully received and are currently marked as available, but not yet withdrawable.</li>
+                <li>This is because JPY transactions follow a T+1 settlement cycle, which means payments made yesterday will become withdrawable on the next business day.
+
+</li>
+                <li>Since yesterday was [weekday], and today is [Monday/Tuesday/etc.], the funds will be available for withdrawal by [next settlement date/time].
+
+</li>
+            </ul>
+            <div>There are three balance types in your dashboard:</div>
+            <ul>
+                <li>Available: The total funds received, including pending.</li>
+                <li>Pending: Payments still being processed or in holding.</li>
+                <li>Withdrawable: The amount currently eligible to withdraw.</li>
+            </ul>
+            <div>I want to reassure you that everything is working as expected — there’s no issue with your account, and your funds will become available soon. Let us know if you don’t see the update by [settlement date/time], and we’ll investigate furthe</div>
+        </div>
+        <div class="question question8">
+            <h3>Question 8:</h3>
+            <div>How to Simulate a Payin Completion</div>
+            <div>Hello Clever provides a sandbox-only simulation endpoint to help merchants test webhook and payment flow behavior without using real money.
+
+</div>
+            <div>To mark a Payin request as completed, the merchant can use the simulation endpoint (only available in the sandbox environment).</div>
+            <div>Simulation Endpoint </div>
+            <div>POST https://api.cleverhub.co/api/v2/simulations/payin/complete</div>
+            <div>Provide a complete API request body that marks the payment as completed,
+with an amount of 500. </div>
+            <div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>{</div>
+                <div>  "uuid": "MB3Y26GO",</div>
+                <div>    "amount": 500</div>
+                <div>}</div>
+            </div>
+            <ul>
+                <li>uuid: The unique Payin ID created by the merchant earlier.</li>
+                <li>amount: The amount to mark as successfully paid.
+</li>
+            </ul>
+            <div>Write a curl command using Bearer authentication that performs this
+simulation</div>
+<div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>curl -X POST https://api.cleverhub.co/api/v2/simulations/payin/complete \</div>
+                <div>   -H "Authorization: Bearer sk_test_yourSandboxTokenHere" \
+                <div>   -H "Content-Type: application/json" \</div>
+                <div>  -d '{</div>
+                <div>  "uuid": "MB3Y26GO",</div>
+                <div>    "amount": 500</div>
+                <div>  }'</div>
+            </div>
+            </div>
+            <div>Outline one important restriction when using this simulation endpoint</div>
+            <ul>
+                <li>The UUID must reference an existing sandbox payin request.</li>
+                <li>The payin must be in a PENDING state — completed or failed requests cannot be simulated.</li>
+            </ul>
+            <div>If the payment is not in a PENDING state, what kind of response or error
+might the merchant receive?</div>
+<div>If the Payin request is not in the PENDING state (e.g., already completed or cancelled), the API will typically respond with:</div>
+             <div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>{</div>
+                <div>  "error": "InvalidPayinState",</div>
+                <div>     "message": "Only payins in 'PENDING' status can be simulated."
+                <div>  }</div>
+            </div>
+            </div>   
+        </div>
+        <div class="question question9">
+            <h3>Question9 :</h3>
+            <div>Three possible reasons why the merchant might not have
+received the webhook notification or token. </div>
+<ul>
+    <li>	Firewall or IP Restrictions</li>
+    <li>	Endpoint Not Responding or Failing</li>
+    <li>	Webhook Not Registered for the Right Events</li>
+</ul>
+<div>how the token object behaves in webhook events, including when it
+appears and when it does not. </div>
+<ul>
+    <li>Payment authorised </li>
+    <li>Payment failed or cancelled </li>
+    <li>Token is reusable</li>
+</ul>
+<div>Sample</div>
+<div style="padding: 3px 5px ;border: 1px solid black;width:30px">bash </div>
+            <div style="background-color: black;color: violet;padding: 10px 20px ;width:600px">
+                <div>{</div>
+                <div>   "event": "payment.authorised",
+                <div>    "timestamp": "2025-06-30T11:45:00Z"</div>
+                <div>  "data": {</div>
+                    <div>    "uuid": "pay_abc123xyz456",</div>
+                    <div>    "status": "authorised",
+</div>
+    <div>    "currency": "AUD",
+</div>
+<div>    "method": "card",
+</div>
+<div>    "created_at": "2025-06-30T11:43:00Z",
+</div>
+<div>    "token": {
+</div>
+<div>      "id": "tok_xyz9876",
+</div>
+<div>      "type": "card",
+</div>
+<div>      "brand": "Visa",
+</div>
+<div>      "last4": "4242",
+</div>
+<div>      "expiry_month": 12,
+</div>
+<div>      "expiry_year": 2026,
+</div>
+<div>      "is_reusable": true
+</div>
+<div>    },
+</div>
+<div>    "customer": {
+</div>
+<div>      "id": "cus_001",
+</div>
+<div>      "email": "user@example.com"
+</div>
+<div>    },
+</div>
+<div>    "metadata": {
+</div>
+<div>      "order_id": "ORDER-56789"
+</div>
+<div>    }
+</div>
+<div>  },
+</div>
+<div>  "webhook_id": "wh_12345"
+</div>
+<div>}
+</div>
+            </div>
+            </div>
+        </div>
+        <div class="question question10">
+            <h3>Question 10</h3>
+            <div>JavaScript SDK Script URLs</div>
+            <div>Production: <a href="https://js.cleverhub.co/clever.js
+">https://js.cleverhub.co/clever.js
+</a></div>
+            <div>Sandbox: <a href="https://js.helloclever.co/clever.js
+
+">https://js.helloclever.co/clever.js
+
+</a></div>
+        </div>
+        <div>Why it's important to use the correct script for each environment. </div>
+        <ul>
+            <li>Isolation of test and live data	</li>
+            <li>Correct API key pairing	</li>
+            <li>Security and compliance	</li>
+            <li>Webhook behavior	</li>
+        </ul>
+        <div>Potential Issues If Developer Uses Wrong Script</div>
+        <ul>
+            <li>Sandbox script used in production checkout	</li>
+            <li>Production script used in sandbox testing	</li>
+            <li>Incorrect error handling	</li>
+        </ul>
+    </div>
+</body>
+</html>
