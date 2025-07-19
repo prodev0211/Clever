@@ -13,6 +13,9 @@ const { connectRedis } = require('./config/redis');
 
 // Import routes
 const authRoutes = require('./routes/auth');
+const guildRoutes = require('./routes/guilds');
+const channelRoutes = require('./routes/channels');
+const messageRoutes = require('./routes/messages');
 
 // Import socket handlers
 const socketHandler = require('./socket');
@@ -55,6 +58,9 @@ app.use(limiter);
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/guilds', guildRoutes);
+app.use('/api/channels', channelRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

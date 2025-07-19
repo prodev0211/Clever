@@ -1,237 +1,139 @@
 'use client';
 
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/stores/authStore';
-import { useSocket } from '@/hooks/useSocket';
+import { useGuildStore } from '@/stores/guildStore';
+import { useChannelStore } from '@/stores/channelStore';
+import { GuildList } from '@/components/GuildList';
+import { ChannelList } from '@/components/ChannelList';
+import { MessageList } from '@/components/MessageList';
+import { MessageInput } from '@/components/MessageInput';
 import { Avatar } from '@/components/ui/Avatar';
-import { Button } from '@/components/ui/Button';
 
 export default function AppPage() {
-  const { user, isAuthenticated, logout } = useAuthStore();
-  const { isConnected } = useSocket();
+  const { user, logout } = useAuthStore();
+  const { currentGuild, setCurrentGuild } = useGuildStore();
+  const { currentChannel, setCurrentChannel } = useChannelStore();
+  
+  const [selectedGuildId, setSelectedGuildId] = useState<string | null>(null);
+  const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null);
 
-  if (!isAuthenticated || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Not authenticated
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            Please log in to access the application.
-          </p>
-          <Button onClick={() => window.location.href = '/auth/login'}>
-            Go to Login
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  const handleGuildSelect = (guild: any) => {
+    setSelectedGuildId(guild?.id || null);
+    setCurrentGuild(guild);
+    setSelectedChannelId(null);
+    setCurrentChannel(null);
+  };
+
+  const handleChannelSelect = (channel: any) => {
+    setSelectedChannelId(channel?.id || null);
+    setCurrentChannel(channel);
+  };
 
   return (
-    <div className="h-screen flex bg-gray-100 dark:bg-gray-900">
+    <div className="h-screen bg-gray-900 text-white flex">
       {/* Server List Sidebar */}
-      <div className="w-16 bg-gray-800 dark:bg-gray-950 flex flex-col items-center py-4 space-y-2">
-        {/* Home Server */}
-        <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-indigo-700 transition-colors">
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-        </div>
-        
-        {/* Separator */}
-        <div className="w-8 h-px bg-gray-600"></div>
-        
-        {/* Add Server Button */}
-        <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-600 transition-colors">
-          <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-        </div>
+      <div className="w-16 bg-gray-800 flex flex-col items-center py-4">
+        <GuildList
+          onGuildSelect={handleGuildSelect}
+          selectedGuildId={selectedGuildId}
+        />
       </div>
 
       {/* Channel List Sidebar */}
-      <div className="w-60 bg-gray-700 dark:bg-gray-800 flex flex-col">
-        {/* Server Header */}
-        <div className="h-12 bg-gray-800 dark:bg-gray-900 flex items-center px-4 border-b border-gray-600">
-          <h1 className="text-white font-semibold">DevOnNight</h1>
+      <div className="w-60 bg-gray-800 border-r border-gray-700 flex flex-col">
+        <div className="p-4 border-b border-gray-700">
+          <h2 className="text-lg font-semibold text-white">
+            {currentGuild?.name || 'Select a Server'}
+          </h2>
+          {currentGuild && (
+            <p className="text-sm text-gray-400">
+              {currentGuild.memberCount} members
+            </p>
+          )}
         </div>
-
-        {/* Channel List */}
-        <div className="flex-1 overflow-y-auto p-2">
-          <div className="space-y-1">
-            {/* Text Channels */}
-            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-2 py-1">
-              Text Channels
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center px-2 py-1 text-gray-300 hover:bg-gray-600 rounded cursor-pointer">
-                <span className="text-gray-400 mr-2">#</span>
-                general
-              </div>
-              <div className="flex items-center px-2 py-1 text-gray-300 hover:bg-gray-600 rounded cursor-pointer">
-                <span className="text-gray-400 mr-2">#</span>
-                announcements
-              </div>
-              <div className="flex items-center px-2 py-1 text-gray-300 hover:bg-gray-600 rounded cursor-pointer">
-                <span className="text-gray-400 mr-2">#</span>
-                random
-              </div>
-            </div>
-
-            {/* Voice Channels */}
-            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-2 py-1 mt-4">
-              Voice Channels
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center px-2 py-1 text-gray-300 hover:bg-gray-600 rounded cursor-pointer">
-                <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
-                General
-              </div>
-              <div className="flex items-center px-2 py-1 text-gray-300 hover:bg-gray-600 rounded cursor-pointer">
-                <svg className="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
-                Gaming
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* User Info */}
-        <div className="h-16 bg-gray-800 dark:bg-gray-900 flex items-center px-2 border-t border-gray-600">
-          <div className="flex items-center space-x-2 flex-1">
-            <Avatar
-              src={user.avatar}
-              alt={user.username}
-              size="sm"
-              status={user.status}
-            />
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-white truncate">
-                {user.username}
-              </div>
-              <div className="text-xs text-gray-400">
-                #{user.discriminator}
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center space-x-1">
-            <button className="p-1 text-gray-400 hover:text-white">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-              </svg>
-            </button>
-            <button className="p-1 text-gray-400 hover:text-white">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </button>
-            <button 
-              className="p-1 text-gray-400 hover:text-white"
-              onClick={logout}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-            </button>
-          </div>
+        
+        <div className="flex-1 overflow-y-auto">
+          <ChannelList
+            guildId={selectedGuildId}
+            onChannelSelect={handleChannelSelect}
+            selectedChannelId={selectedChannelId}
+          />
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col bg-white dark:bg-gray-900">
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col">
         {/* Channel Header */}
-        <div className="h-12 bg-gray-100 dark:bg-gray-800 flex items-center px-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-2">
-            <span className="text-gray-400">#</span>
-            <h2 className="font-semibold text-gray-900 dark:text-white">general</h2>
+        <div className="h-14 bg-gray-800 border-b border-gray-700 flex items-center px-4">
+          <div className="flex items-center space-x-3">
+            <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+            </svg>
+            <span className="font-semibold text-white">
+              {currentChannel ? `#${currentChannel.name}` : 'Select a channel'}
+            </span>
           </div>
+          
           <div className="ml-auto flex items-center space-x-2">
-            <div className="flex items-center space-x-1 text-sm text-gray-500">
-              <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span>{isConnected ? 'Connected' : 'Disconnected'}</span>
-            </div>
+            <button className="p-2 text-gray-400 hover:text-white">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+              </svg>
+            </button>
+            <button className="p-2 text-gray-400 hover:text-white">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+              </svg>
+            </button>
+            <button className="p-2 text-gray-400 hover:text-white">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+              </svg>
+            </button>
           </div>
         </div>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="space-y-4">
-            {/* Welcome Message */}
-            <div className="flex items-start space-x-3">
-              <Avatar
-                src={user.avatar}
-                alt={user.username}
-                size="md"
-                status={user.status}
-              />
-              <div className="flex-1">
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {user.username}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    #{user.discriminator}
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    Today at 12:00 PM
-                  </span>
-                </div>
-                <div className="mt-1 text-gray-700 dark:text-gray-300">
-                  Welcome to DevOnNight! 🎉 This is a Discord-like chat application built with Next.js, Express, and Socket.IO.
-                </div>
-              </div>
-            </div>
-
-            {/* System Message */}
-            <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium text-indigo-600 dark:text-indigo-400">
-                    DevOnNight Bot
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    Today at 12:01 PM
-                  </span>
-                </div>
-                <div className="mt-1 text-gray-700 dark:text-gray-300">
-                  <strong>Features implemented:</strong>
-                  <br />• User authentication (login/register)
-                  <br />• Real-time Socket.IO connection
-                  <br />• Discord-like UI layout
-                  <br />• Dark mode support
-                  <br />• Responsive design
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="flex-1 flex flex-col">
+          <MessageList channelId={selectedChannelId} />
+          <MessageInput channelId={selectedChannelId} />
         </div>
+      </div>
 
-        {/* Message Input */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center space-x-2">
-            <div className="flex-1 bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-2">
-              <input
-                type="text"
-                placeholder="Message #general"
-                className="w-full bg-transparent text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none"
-              />
-            </div>
-            <button className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-            </button>
+      {/* User Panel */}
+      <div className="w-60 bg-gray-800 border-l border-gray-700 p-4">
+        <div className="flex items-center space-x-3 mb-4">
+          <Avatar
+            src={user?.avatar}
+            alt={user?.username}
+            fallback={user?.username?.charAt(0).toUpperCase()}
+            className="w-10 h-10"
+          />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-white truncate">
+              {user?.username}
+            </p>
+            <p className="text-xs text-gray-400 truncate">
+              {user?.email}
+            </p>
           </div>
+          <button
+            onClick={logout}
+            className="p-1 text-gray-400 hover:text-white"
+            title="Logout"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
+            </svg>
+          </button>
+        </div>
+        
+        <div className="space-y-2">
+          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            Online - {currentGuild?.memberCount || 0}
+          </h3>
+          {/* TODO: Add member list */}
         </div>
       </div>
     </div>
