@@ -127,6 +127,87 @@ const socketHandler = (io) => {
       console.log(`User ${socket.user.username} left channel ${channelId}`);
     });
 
+    // Handle message reactions
+    socket.on('MESSAGE_REACTION_ADD', async (data) => {
+      try {
+        const { messageId, emoji } = data;
+        const userId = socket.userId;
+
+        // TODO: Add reaction to database
+        // For now, just emit to channel
+        const Message = require('../models/Message');
+        const message = await Message.findById(messageId);
+        if (message) {
+          socket.to(`channel:${message.channelId}`).emit('MESSAGE_REACTION_ADD', {
+            messageId,
+            emoji,
+            userId,
+            username: socket.user.username
+          });
+        }
+      } catch (error) {
+        console.error('Message reaction add error:', error);
+      }
+    });
+
+    socket.on('MESSAGE_REACTION_REMOVE', async (data) => {
+      try {
+        const { messageId, emoji } = data;
+        const userId = socket.userId;
+
+        // TODO: Remove reaction from database
+        const Message = require('../models/Message');
+        const message = await Message.findById(messageId);
+        if (message) {
+          socket.to(`channel:${message.channelId}`).emit('MESSAGE_REACTION_REMOVE', {
+            messageId,
+            emoji,
+            userId
+          });
+        }
+      } catch (error) {
+        console.error('Message reaction remove error:', error);
+      }
+    });
+
+    // Handle voice channel join/leave
+    socket.on('VOICE_JOIN', async (data) => {
+      try {
+        const { channelId } = data;
+        const userId = socket.userId;
+
+        // Check if channel is voice channel
+        const Channel = require('../models/Channel');
+        const channel = await Channel.findById(channelId);
+        if (channel && (channel.type === 'GUILD_VOICE' || channel.type === 'GUILD_STAGE_VOICE')) {
+          socket.join(`voice:${channelId}`);
+          socket.to(`voice:${channelId}`).emit('VOICE_USER_JOIN', {
+            channelId,
+            userId,
+            username: socket.user.username
+          });
+        }
+      } catch (error) {
+        console.error('Voice join error:', error);
+      }
+    });
+
+    socket.on('VOICE_LEAVE', async (data) => {
+      try {
+        const { channelId } = data;
+        const userId = socket.userId;
+
+        socket.leave(`voice:${channelId}`);
+        socket.to(`voice:${channelId}`).emit('VOICE_USER_LEAVE', {
+          channelId,
+          userId,
+          username: socket.user.username
+        });
+      } catch (error) {
+        console.error('Voice leave error:', error);
+      }
+    });
+
     // Handle heartbeat
     socket.on('HEARTBEAT', () => {
       socket.emit('HEARTBEAT_ACK');

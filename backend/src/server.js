@@ -16,6 +16,7 @@ const authRoutes = require('./routes/auth');
 const guildRoutes = require('./routes/guilds');
 const channelRoutes = require('./routes/channels');
 const messageRoutes = require('./routes/messages');
+const reactionRoutes = require('./routes/reactions');
 
 // Import socket handlers
 const socketHandler = require('./socket');
@@ -61,6 +62,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/guilds', guildRoutes);
 app.use('/api/channels', channelRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/reactions', reactionRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
