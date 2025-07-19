@@ -22,6 +22,7 @@ const uploadRoutes = require('./routes/upload');
 const dmRoutes = require('./routes/dms');
 const roleRoutes = require('./routes/roles');
 const searchRoutes = require('./routes/search');
+const threadRoutes = require('./routes/threads');
 
 // Import socket handlers
 const socketHandler = require('./socket');
@@ -72,6 +73,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/dms', dmRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/threads', threadRoutes);
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
