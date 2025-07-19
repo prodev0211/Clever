@@ -9,6 +9,10 @@ import { ChannelList } from '@/components/ChannelList';
 import { MessageList } from '@/components/MessageList';
 import { MessageInput } from '@/components/MessageInput';
 import { Avatar } from '@/components/ui/Avatar';
+import { SearchModal } from '@/components/SearchModal';
+import { DMList } from '@/components/DMList';
+import { GuildMemberList } from '@/components/GuildMemberList';
+import { GuildAdminPanel } from '@/components/GuildAdminPanel';
 
 export default function AppPage() {
   const { user, logout } = useAuthStore();
@@ -17,6 +21,8 @@ export default function AppPage() {
   
   const [selectedGuildId, setSelectedGuildId] = useState<string | null>(null);
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null);
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const [userPanelTab, setUserPanelTab] = useState<'members' | 'admin' | 'dms'>('members');
 
   const handleGuildSelect = (guild: any) => {
     setSelectedGuildId(guild?.id || null);
@@ -76,7 +82,10 @@ export default function AppPage() {
           </div>
           
           <div className="ml-auto flex items-center space-x-2">
-            <button className="p-2 text-gray-400 hover:text-white">
+            <button 
+              className="p-2 text-gray-400 hover:text-white"
+              onClick={() => setShowSearchModal(true)}
+            >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
               </svg>
@@ -102,8 +111,8 @@ export default function AppPage() {
       </div>
 
       {/* User Panel */}
-      <div className="w-60 bg-gray-800 border-l border-gray-700 p-4">
-        <div className="flex items-center space-x-3 mb-4">
+      <div className="w-60 bg-gray-800 border-l border-gray-700 flex flex-col">
+        <div className="flex items-center space-x-3 p-4 border-b border-gray-700">
           <Avatar
             src={user?.avatar}
             alt={user?.username}
@@ -129,13 +138,62 @@ export default function AppPage() {
           </button>
         </div>
         
-        <div className="space-y-2">
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            Online - {currentGuild?.memberCount || 0}
-          </h3>
-          {/* TODO: Add member list */}
+        {/* Tab Navigation */}
+        <div className="flex border-b border-gray-700">
+          <button
+            className={`flex-1 px-3 py-2 text-xs font-medium transition-colors ${
+              userPanelTab === 'members'
+                ? 'text-white border-b-2 border-blue-500'
+                : 'text-gray-400 hover:text-white'
+            }`}
+            onClick={() => setUserPanelTab('members')}
+          >
+            Members
+          </button>
+          <button
+            className={`flex-1 px-3 py-2 text-xs font-medium transition-colors ${
+              userPanelTab === 'admin'
+                ? 'text-white border-b-2 border-blue-500'
+                : 'text-gray-400 hover:text-white'
+            }`}
+            onClick={() => setUserPanelTab('admin')}
+          >
+            Admin
+          </button>
+          <button
+            className={`flex-1 px-3 py-2 text-xs font-medium transition-colors ${
+              userPanelTab === 'dms'
+                ? 'text-white border-b-2 border-blue-500'
+                : 'text-gray-400 hover:text-white'
+            }`}
+            onClick={() => setUserPanelTab('dms')}
+          >
+            DMs
+          </button>
+        </div>
+        
+        {/* Tab Content */}
+        <div className="flex-1 overflow-y-auto">
+          {userPanelTab === 'members' && (
+            <GuildMemberList guildId={selectedGuildId} />
+          )}
+          {userPanelTab === 'admin' && (
+            <GuildAdminPanel guildId={selectedGuildId} />
+          )}
+          {userPanelTab === 'dms' && (
+            <DMList />
+          )}
         </div>
       </div>
+
+      {/* Search Modal */}
+      {showSearchModal && (
+        <SearchModal 
+          isOpen={showSearchModal}
+          onClose={() => setShowSearchModal(false)}
+          guildId={selectedGuildId}
+        />
+      )}
     </div>
   );
 }

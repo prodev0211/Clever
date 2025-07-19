@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { useChannelStore, Channel } from '@/stores/channelStore';
 import { cn } from '@/lib/utils';
 import { CreateChannelModal } from './CreateChannelModal';
+import { ThreadList } from './ThreadList';
+import { VoiceChannelList } from './VoiceChannelList';
+import { VoiceUserList } from './VoiceUserList';
 
 interface ChannelListProps {
   guildId?: string;
@@ -147,17 +150,20 @@ export function ChannelList({ guildId, onChannelSelect, selectedChannelId }: Cha
             Text Channels
           </div>
           {textChannels.map((channel) => (
-            <button
-              key={channel.id}
-              className={cn(
-                "flex items-center space-x-2 w-full px-2 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded text-sm",
-                selectedChannelId === channel.id && "bg-gray-700 text-white"
-              )}
-              onClick={() => onChannelSelect?.(channel)}
-            >
-              {getChannelIcon(channel.type)}
-              <span className="truncate">#{channel.name}</span>
-            </button>
+            <div key={channel.id} className="space-y-1">
+              <button
+                className={cn(
+                  "flex items-center space-x-2 w-full px-2 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded text-sm",
+                  selectedChannelId === channel.id && "bg-gray-700 text-white"
+                )}
+                onClick={() => onChannelSelect?.(channel)}
+              >
+                {getChannelIcon(channel.type)}
+                <span className="truncate">#{channel.name}</span>
+              </button>
+              {/* ThreadList for text channels */}
+              <ThreadList channelId={channel.id} />
+            </div>
           ))}
         </div>
       )}
@@ -169,17 +175,21 @@ export function ChannelList({ guildId, onChannelSelect, selectedChannelId }: Cha
             Voice Channels
           </div>
           {voiceChannels.map((channel) => (
-            <button
-              key={channel.id}
-              className={cn(
-                "flex items-center space-x-2 w-full px-2 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded text-sm",
-                selectedChannelId === channel.id && "bg-gray-700 text-white"
-              )}
-              onClick={() => onChannelSelect?.(channel)}
-            >
-              {getChannelIcon(channel.type)}
-              <span className="truncate">{channel.name}</span>
-            </button>
+            <div key={channel.id} className="space-y-1">
+              <button
+                className={cn(
+                  "flex items-center space-x-2 w-full px-2 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded text-sm",
+                  selectedChannelId === channel.id && "bg-gray-700 text-white"
+                )}
+                onClick={() => onChannelSelect?.(channel)}
+              >
+                {getChannelIcon(channel.type)}
+                <span className="truncate">{channel.name}</span>
+              </button>
+              {/* VoiceChannelList and VoiceUserList for voice channels */}
+              <VoiceChannelList channelId={channel.id} />
+              <VoiceUserList channelId={channel.id} />
+            </div>
           ))}
         </div>
       )}
