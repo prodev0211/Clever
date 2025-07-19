@@ -3,6 +3,7 @@
 import { useState, KeyboardEvent } from 'react';
 import { useChannelStore } from '@/stores/channelStore';
 import { Button } from '@/components/ui/Button';
+import { FileUpload } from './FileUpload';
 
 interface MessageInputProps {
   channelId?: string;
@@ -12,6 +13,7 @@ interface MessageInputProps {
 export function MessageInput({ channelId, disabled }: MessageInputProps) {
   const [message, setMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showFileUpload, setShowFileUpload] = useState(false);
   const { sendMessage, loading } = useChannelStore();
 
   const handleSubmit = async () => {
@@ -75,6 +77,7 @@ export function MessageInput({ channelId, disabled }: MessageInputProps) {
         <div className="flex items-center space-x-2">
           {/* Attachment button */}
           <button
+            onClick={() => setShowFileUpload(true)}
             disabled={disabled || loading}
             className="p-2 text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             title="Attach file"
@@ -120,6 +123,18 @@ export function MessageInput({ channelId, disabled }: MessageInputProps) {
         <div className="mt-2 text-xs text-gray-400">
           <span className="animate-pulse">Typing...</span>
         </div>
+      )}
+      
+      {/* File Upload Modal */}
+      {showFileUpload && (
+        <FileUpload
+          onFilesUploaded={(attachments) => {
+            console.log('Files uploaded:', attachments);
+            // TODO: Add attachments to message
+            setShowFileUpload(false);
+          }}
+          onClose={() => setShowFileUpload(false)}
+        />
       )}
     </div>
   );

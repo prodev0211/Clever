@@ -6,6 +6,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 
 // Import configurations
 const connectDB = require('./config/database');
@@ -17,6 +18,8 @@ const guildRoutes = require('./routes/guilds');
 const channelRoutes = require('./routes/channels');
 const messageRoutes = require('./routes/messages');
 const reactionRoutes = require('./routes/reactions');
+const uploadRoutes = require('./routes/upload');
+const dmRoutes = require('./routes/dms');
 
 // Import socket handlers
 const socketHandler = require('./socket');
@@ -63,6 +66,11 @@ app.use('/api/guilds', guildRoutes);
 app.use('/api/channels', channelRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/reactions', reactionRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/dms', dmRoutes);
+
+// Serve static files
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
