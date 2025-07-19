@@ -20,6 +20,8 @@ const messageRoutes = require('./routes/messages');
 const reactionRoutes = require('./routes/reactions');
 const uploadRoutes = require('./routes/upload');
 const dmRoutes = require('./routes/dms');
+const roleRoutes = require('./routes/roles');
+const searchRoutes = require('./routes/search');
 
 // Import socket handlers
 const socketHandler = require('./socket');
@@ -68,6 +70,8 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/reactions', reactionRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/dms', dmRoutes);
+app.use('/api/roles', roleRoutes);
+app.use('/api/search', searchRoutes);
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

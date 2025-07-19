@@ -1,49 +1,56 @@
 const mongoose = require('mongoose');
 
 // Permission constants
-const Permissions = {
-  // General
-  CREATE_INSTANT_INVITE: 1n << 0n,
-  KICK_MEMBERS: 1n << 1n,
-  BAN_MEMBERS: 1n << 2n,
-  ADMINISTRATOR: 1n << 3n,
-  MANAGE_CHANNELS: 1n << 4n,
-  MANAGE_GUILD: 1n << 5n,
-  ADD_REACTIONS: 1n << 6n,
-  VIEW_AUDIT_LOG: 1n << 7n,
-  PRIORITY_SPEAKER: 1n << 8n,
-  STREAM: 1n << 9n,
-  VIEW_CHANNEL: 1n << 10n,
-  SEND_MESSAGES: 1n << 11n,
-  SEND_TTS_MESSAGES: 1n << 12n,
-  MANAGE_MESSAGES: 1n << 13n,
-  EMBED_LINKS: 1n << 14n,
-  ATTACH_FILES: 1n << 15n,
-  READ_MESSAGE_HISTORY: 1n << 16n,
-  MENTION_EVERYONE: 1n << 17n,
-  USE_EXTERNAL_EMOJIS: 1n << 18n,
-  VIEW_GUILD_INSIGHTS: 1n << 19n,
-  CONNECT: 1n << 20n,
-  SPEAK: 1n << 21n,
-  MUTE_MEMBERS: 1n << 22n,
-  DEAFEN_MEMBERS: 1n << 23n,
-  MOVE_MEMBERS: 1n << 24n,
-  USE_VAD: 1n << 25n,
-  CHANGE_NICKNAME: 1n << 26n,
-  MANAGE_NICKNAMES: 1n << 27n,
-  MANAGE_ROLES: 1n << 28n,
-  MANAGE_WEBHOOKS: 1n << 29n,
-  MANAGE_EMOJIS_AND_STICKERS: 1n << 30n,
-  USE_APPLICATION_COMMANDS: 1n << 31n,
-  REQUEST_TO_SPEAK: 1n << 32n,
-  MANAGE_EVENTS: 1n << 33n,
-  MANAGE_THREADS: 1n << 34n,
-  CREATE_PUBLIC_THREADS: 1n << 35n,
-  CREATE_PRIVATE_THREADS: 1n << 36n,
-  USE_EXTERNAL_STICKERS: 1n << 37n,
-  SEND_MESSAGES_IN_THREADS: 1n << 38n,
-  USE_ACTIVITIES: 1n << 39n,
-  MODERATE_MEMBERS: 1n << 40n
+const PERMISSIONS = {
+  // General permissions
+  VIEW_CHANNEL: 1 << 0,
+  SEND_MESSAGES: 1 << 1,
+  MANAGE_MESSAGES: 1 << 2,
+  EMBED_LINKS: 1 << 3,
+  ATTACH_FILES: 1 << 4,
+  ADD_REACTIONS: 1 << 5,
+  USE_EXTERNAL_EMOJIS: 1 << 6,
+  USE_EXTERNAL_STICKERS: 1 << 7,
+  
+  // Voice permissions
+  CONNECT: 1 << 8,
+  SPEAK: 1 << 9,
+  STREAM: 1 << 10,
+  USE_VAD: 1 << 11,
+  PRIORITY_SPEAKER: 1 << 12,
+  REQUEST_TO_SPEAK: 1 << 13,
+  
+  // Channel management
+  MANAGE_CHANNELS: 1 << 14,
+  MANAGE_ROLES: 1 << 15,
+  MANAGE_WEBHOOKS: 1 << 16,
+  MANAGE_THREADS: 1 << 17,
+  
+  // Guild management
+  MANAGE_GUILD: 1 << 18,
+  MANAGE_NICKNAMES: 1 << 19,
+  MANAGE_EMOJIS_AND_STICKERS: 1 << 20,
+  VIEW_AUDIT_LOG: 1 << 21,
+  VIEW_GUILD_INSIGHTS: 1 << 22,
+  
+  // Advanced permissions
+  ADMINISTRATOR: 1 << 23,
+  KICK_MEMBERS: 1 << 24,
+  BAN_MEMBERS: 1 << 25,
+  MODERATE_MEMBERS: 1 << 26,
+  
+  // Thread permissions
+  CREATE_PUBLIC_THREADS: 1 << 27,
+  CREATE_PRIVATE_THREADS: 1 << 28,
+  USE_EXTERNAL_APPLICATIONS: 1 << 29,
+  SEND_MESSAGES_IN_THREADS: 1 << 30,
+  
+  // Stage permissions
+  REQUEST_TO_SPEAK: 1 << 31,
+  MANAGE_EVENTS: 1 << 32,
+  MANAGE_THREADS: 1 << 33,
+  USE_APPLICATION_COMMANDS: 1 << 34,
+  SEND_VOICE_MESSAGES: 1 << 35
 };
 
 const roleSchema = new mongoose.Schema({
@@ -55,8 +62,6 @@ const roleSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true,
-    minlength: 1,
     maxlength: 100
   },
   color: {
@@ -69,11 +74,11 @@ const roleSchema = new mongoose.Schema({
   },
   position: {
     type: Number,
-    required: true
+    default: 0
   },
   permissions: {
-    type: String, // Store as string for BigInt
-    default: '0'
+    type: Number,
+    default: 0
   },
   mentionable: {
     type: Boolean,
@@ -91,10 +96,9 @@ const roleSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  tags: {
-    bot_id: mongoose.Schema.Types.ObjectId,
-    integration_id: mongoose.Schema.Types.ObjectId,
-    premium_subscriber: Boolean
+  isDeleted: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true
@@ -102,42 +106,98 @@ const roleSchema = new mongoose.Schema({
 
 // Indexes
 roleSchema.index({ guildId: 1, position: -1 });
-roleSchema.index({ guildId: 1, name: 1 });
+roleSchema.index({ guildId: 1, isDeleted: 1 });
 
-// Static methods for permission handling
-roleSchema.statics.Permissions = Permissions;
+// Virtual for permission flags
+roleSchema.virtual('permissionFlags').get(function() {
+  const flags = {};
+  for (const [permission, flag] of Object.entries(PERMISSIONS)) {
+    flags[permission] = (this.permissions & flag) === flag;
+  }
+  return flags;
+});
 
 // Instance methods
 roleSchema.methods.hasPermission = function(permission) {
-  const permissions = BigInt(this.permissions);
-  return (permissions & permission) === permission;
+  if (this.permissionFlags.ADMINISTRATOR) return true;
+  return (this.permissions & PERMISSIONS[permission]) === PERMISSIONS[permission];
 };
 
 roleSchema.methods.addPermission = function(permission) {
-  const permissions = BigInt(this.permissions);
-  this.permissions = (permissions | permission).toString();
+  if (PERMISSIONS[permission]) {
+    this.permissions |= PERMISSIONS[permission];
+  }
+  return this;
 };
 
 roleSchema.methods.removePermission = function(permission) {
-  const permissions = BigInt(this.permissions);
-  this.permissions = (permissions & ~permission).toString();
+  if (PERMISSIONS[permission]) {
+    this.permissions &= ~PERMISSIONS[permission];
+  }
+  return this;
 };
 
 roleSchema.methods.setPermissions = function(permissions) {
-  this.permissions = permissions.toString();
+  this.permissions = 0;
+  permissions.forEach(permission => {
+    this.addPermission(permission);
+  });
+  return this;
 };
 
-// Pre-save middleware to ensure position is set
+// Static methods
+roleSchema.statics.getDefaultRoles = function() {
+  return [
+    {
+      name: '@everyone',
+      color: 0,
+      hoist: false,
+      position: 0,
+      permissions: PERMISSIONS.VIEW_CHANNEL,
+      mentionable: false,
+      managed: true
+    },
+    {
+      name: 'Moderator',
+      color: 0x3498db,
+      hoist: true,
+      position: 1,
+      permissions: PERMISSIONS.VIEW_CHANNEL | PERMISSIONS.SEND_MESSAGES | 
+                   PERMISSIONS.MANAGE_MESSAGES | PERMISSIONS.KICK_MEMBERS |
+                   PERMISSIONS.BAN_MEMBERS | PERMISSIONS.MANAGE_CHANNELS,
+      mentionable: true,
+      managed: false
+    },
+    {
+      name: 'Admin',
+      color: 0xe74c3c,
+      hoist: true,
+      position: 2,
+      permissions: PERMISSIONS.ADMINISTRATOR,
+      mentionable: true,
+      managed: false
+    }
+  ];
+};
+
+// Pre-save middleware to ensure unique names within guild
 roleSchema.pre('save', async function(next) {
-  if (this.isNew && this.position === undefined) {
-    const maxPosition = await this.constructor
-      .findOne({ guildId: this.guildId })
-      .sort({ position: -1 })
-      .select('position');
+  if (this.isModified('name')) {
+    const existingRole = await this.constructor.findOne({
+      guildId: this.guildId,
+      name: this.name,
+      isDeleted: false,
+      _id: { $ne: this._id }
+    });
     
-    this.position = maxPosition ? maxPosition.position + 1 : 0;
+    if (existingRole) {
+      return next(new Error('Role name already exists in this guild'));
+    }
   }
   next();
 });
 
-module.exports = mongoose.model('Role', roleSchema);
+module.exports = {
+  Role: mongoose.model('Role', roleSchema),
+  PERMISSIONS
+};
