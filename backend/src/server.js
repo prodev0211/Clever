@@ -23,6 +23,7 @@ const dmRoutes = require('./routes/dms');
 const roleRoutes = require('./routes/roles');
 const searchRoutes = require('./routes/search');
 const threadRoutes = require('./routes/threads');
+const moderationRoutes = require('./routes/moderation');
 
 // Import socket handlers
 const socketHandler = require('./socket');
@@ -74,6 +75,7 @@ app.use('/api/dms', dmRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/threads', threadRoutes);
+app.use('/api/moderation', moderationRoutes);
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
