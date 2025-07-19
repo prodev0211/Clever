@@ -4,6 +4,9 @@ import { useEffect, useRef } from 'react';
 import { useChannelStore, Message } from '@/stores/channelStore';
 import { Avatar } from '@/components/ui/Avatar';
 import { formatDistanceToNow } from 'date-fns';
+import { ReplyList } from './ReplyList';
+import { ReplyInput } from './ReplyInput';
+import { ThreadCreate } from './ThreadCreate';
 
 interface MessageListProps {
   channelId?: string;
@@ -105,7 +108,6 @@ function MessageItem({ message }: MessageItemProps) {
         fallback={message.author.username.charAt(0).toUpperCase()}
         className="w-10 h-10 flex-shrink-0"
       />
-      
       <div className="flex-1 min-w-0">
         <div className="flex items-center space-x-2 mb-1">
           <span className="font-medium text-white">
@@ -118,11 +120,9 @@ function MessageItem({ message }: MessageItemProps) {
             <span className="text-gray-500 text-xs">(edited)</span>
           )}
         </div>
-        
         <div className="text-gray-200 whitespace-pre-wrap break-words">
           {message.content}
         </div>
-        
         {/* Message actions (hover) */}
         <div className="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button className="text-gray-400 hover:text-white text-sm">
@@ -135,6 +135,10 @@ function MessageItem({ message }: MessageItemProps) {
             More
           </button>
         </div>
+        {/* ReplyList, ReplyInput, ThreadCreate */}
+        <ReplyList channelId={message.channelId} messageId={message.id} />
+        <ReplyInput channelId={message.channelId} messageId={message.id} />
+        <ThreadCreate channelId={message.channelId} messageId={message.id} />
       </div>
     </div>
   );
