@@ -39,12 +39,32 @@ check_docker() {
         exit 1
     fi
     
-    if ! command -v docker-compose &> /dev/null; then
-        print_error "Docker Compose is not installed. Please install Docker Compose first."
-        exit 1
+    print_success "Docker is installed"
+}
+
+# Check if Docker Compose is available (try both V1 and V2)
+check_docker_compose() {
+    # Try Docker Compose V2 first
+    if docker compose version &> /dev/null; then
+        DOCKER_COMPOSE_CMD="docker compose"
+        print_success "Docker Compose V2 is available"
+        return 0
     fi
     
-    print_success "Docker and Docker Compose are installed"
+    # Try Docker Compose V1
+    if command -v docker-compose &> /dev/null; then
+        DOCKER_COMPOSE_CMD="docker-compose"
+        print_success "Docker Compose V1 is available"
+        return 0
+    fi
+    
+    print_error "Docker Compose is not available. Please install Docker Compose."
+    echo ""
+    echo "Installation options:"
+    echo "1. Install Docker Desktop (includes Docker Compose V2)"
+    echo "2. Install Docker Compose V2: sudo apt-get install docker-compose-plugin"
+    echo "3. Install Docker Compose V1: sudo apt-get install docker-compose"
+    exit 1
 }
 
 # Check if Node.js is installed
@@ -148,18 +168,32 @@ EOF
 start_docker() {
     print_status "Starting with Docker..."
     
-    # Build and start containers
-    docker-compose up -d --build
+    # Check if docker-compose.yml exists
+    if [ ! -f "docker-compose.yml" ]; then
+        print_error "docker-compose.yml not found!"
+        exit 1
+    fi
     
-    print_success "Application started with Docker!"
-    echo ""
-    echo "🌐 Access your application:"
-    echo "   Frontend: http://localhost:3000"
-    echo "   Backend API: http://localhost:5000"
-    echo "   Health Check: http://localhost:5000/health"
-    echo ""
-    echo "📊 View logs: docker-compose logs -f"
-    echo "🛑 Stop: docker-compose down"
+    # Build and start containers
+    print_status "Building and starting containers..."
+    $DOCKER_COMPOSE_CMD up -d --build
+    
+    if [ $? -eq 0 ]; then
+        print_success "Application started with Docker!"
+        echo ""
+        echo "🌐 Access your application:"
+        echo "   Frontend: http://localhost:3000"
+        echo "   Backend API: http://localhost:5000"
+        echo "   Health Check: http://localhost:5000/health"
+        echo ""
+        echo "📊 View logs: $DOCKER_COMPOSE_CMD logs -f"
+        echo "🛑 Stop: $DOCKER_COMPOSE_CMD down"
+    else
+        print_error "Failed to start Docker containers"
+        echo ""
+        echo "Trying alternative method..."
+        start_local
+    fi
 }
 
 # Start with local development
@@ -171,6 +205,7 @@ start_local() {
         print_warning "MongoDB is not running. Please start MongoDB first."
         echo "   Ubuntu/Debian: sudo systemctl start mongod"
         echo "   macOS: brew services start mongodb/brew/mongodb-community"
+        echo "   Or use Docker: docker run -d -p 27017:27017 --name mongodb mongo:6"
     fi
     
     # Check if Redis is running
@@ -178,6 +213,7 @@ start_local() {
         print_warning "Redis is not running. Please start Redis first."
         echo "   Ubuntu/Debian: sudo systemctl start redis-server"
         echo "   macOS: brew services start redis"
+        echo "   Or use Docker: docker run -d -p 6379:6379 --name redis redis:7-alpine"
     fi
     
     # Start backend
@@ -210,6 +246,19 @@ start_local() {
     wait
 }
 
+# Start with Docker Compose V2 fallback
+start_docker_fallback() {
+    print_status "Trying Docker Compose V2..."
+    
+    if docker compose version &> /dev/null; then
+        DOCKER_COMPOSE_CMD="docker compose"
+        start_docker
+    else
+        print_error "Docker Compose V2 not available"
+        start_local
+    fi
+}
+
 # Main script
 main() {
     echo "DevOnNight - Discord-like Chat Application"
@@ -218,6 +267,7 @@ main() {
     
     # Check prerequisites
     check_docker
+    check_docker_compose
     check_node
     check_npm
     
@@ -232,8 +282,9 @@ main() {
     echo "Choose deployment method:"
     echo "1. Docker (Recommended for production)"
     echo "2. Local Development"
+    echo "3. Docker with fallback to local"
     echo ""
-    read -p "Enter your choice (1 or 2): " choice
+    read -p "Enter your choice (1, 2, or 3): " choice
     
     case $choice in
         1)
@@ -241,6 +292,9 @@ main() {
             ;;
         2)
             start_local
+            ;;
+        3)
+            start_docker_fallback
             ;;
         *)
             print_error "Invalid choice. Please run the script again."
