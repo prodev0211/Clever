@@ -1,212 +1,204 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { useAuthStore } from '@/stores/authStore';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useAuthStore } from '@/stores/authStore'
+import { motion } from 'framer-motion'
+import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react'
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  
-  const { register, isLoading, error, clearError } = useAuthStore();
-  const router = useRouter();
-
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!formData.username) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-    } else if (formData.username.length > 32) {
-      newErrors.username = 'Username must be less than 32 characters';
-    }
-
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const { register, error, clearError } = useAuthStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearError();
+    e.preventDefault()
+    setIsLoading(true)
+    clearError()
 
-    if (!validateForm()) {
-      return;
+    if (password !== confirmPassword) {
+      // Handle password mismatch
+      return
     }
 
     try {
-      await register(formData.username, formData.email, formData.password);
-      router.push('/app');
+      await register(username, email, password)
+      router.push('/app')
     } catch (error) {
-      // Error is handled by the store
+      console.error('Registration failed:', error)
+    } finally {
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-indigo-600">
-            <svg
-              className="h-8 w-8 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-              />
-            </svg>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Back to home */}
+        <Link 
+          href="/"
+          className="inline-flex items-center space-x-2 text-gray-400 hover:text-white transition-colors mb-8"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to home</span>
+        </Link>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="glass rounded-2xl p-8"
+        >
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-white mb-2">Create account</h1>
+            <p className="text-gray-400">Join DevOnNight and start building communities</p>
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-            Create your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-            Or{' '}
-            <Link
-              href="/auth/login"
-              className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-            >
-              sign in to your existing account
-            </Link>
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-4">
-              <div className="text-sm text-red-700 dark:text-red-400">
-                {error}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Username */}
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Username
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="input-modern w-full pl-10 pr-4 py-3"
+                  placeholder="Choose a username"
+                  required
+                  minLength={3}
+                  maxLength={20}
+                />
               </div>
             </div>
-          )}
-          <div className="space-y-4">
-            <Input
-              label="Username"
-              name="username"
-              type="text"
-              value={formData.username}
-              onChange={handleChange}
-              error={errors.username}
-              placeholder="Choose a username"
-              required
-            />
-            <Input
-              label="Email address"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              error={errors.email}
-              placeholder="Enter your email"
-              required
-            />
-            <Input
-              label="Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              error={errors.password}
-              placeholder="Create a password"
-              required
-            />
-            <Input
-              label="Confirm password"
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              error={errors.confirmPassword}
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
 
-          <div className="flex items-center">
-            <input
-              id="agree-terms"
-              name="agree-terms"
-              type="checkbox"
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-              required
-            />
-            <label
-              htmlFor="agree-terms"
-              className="ml-2 block text-sm text-gray-900 dark:text-gray-300"
-            >
-              I agree to the{' '}
-              <Link
-                href="/terms"
-                className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-              >
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link
-                href="/privacy"
-                className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-              >
-                Privacy Policy
-              </Link>
-            </label>
-          </div>
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="input-modern w-full pl-10 pr-4 py-3"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+            </div>
 
-          <div>
-            <Button
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input-modern w-full pl-10 pr-12 py-3"
+                  placeholder="Create a password"
+                  required
+                  minLength={6}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="input-modern w-full pl-10 pr-12 py-3"
+                  placeholder="Confirm your password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                >
+                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Password mismatch error */}
+            {password && confirmPassword && password !== confirmPassword && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-red-500/10 border border-red-500/20 rounded-lg p-3"
+              >
+                <p className="text-red-400 text-sm">Passwords do not match</p>
+              </motion.div>
+            )}
+
+            {/* Error message */}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-red-500/10 border border-red-500/20 rounded-lg p-3"
+              >
+                <p className="text-red-400 text-sm">{error}</p>
+              </motion.div>
+            )}
+
+            {/* Submit button */}
+            <button
               type="submit"
-              className="w-full"
-              loading={isLoading}
+              disabled={isLoading || (password && confirmPassword && password !== confirmPassword)}
+              className="btn-primary w-full py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Create account
-            </Button>
+              {isLoading ? 'Creating account...' : 'Create Account'}
+            </button>
+          </form>
+
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-400">
+              Already have an account?{' '}
+              <Link 
+                href="/auth/login"
+                className="text-purple-400 hover:text-purple-300 transition-colors font-medium"
+              >
+                Sign in
+              </Link>
+            </p>
           </div>
-        </form>
+        </motion.div>
       </div>
     </div>
-  );
+  )
 }

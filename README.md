@@ -1,262 +1,255 @@
-# DevOnNight - Discord-like Chat Application
+# 🚀 DevOnNight - Modern Discord Alternative
 
-A modern, real-time chat application built with Next.js, Node.js, Socket.IO, and MongoDB.
+A beautiful, modern Discord-like chat application built for developers with real-time messaging, voice channels, and powerful collaboration tools.
 
-## 🚀 Features
+![DevOnNight](https://img.shields.io/badge/DevOnNight-Modern%20Discord%20Alternative-purple?style=for-the-badge&logo=discord)
 
-### Core Features
-- **Real-time messaging** with Socket.IO
-- **Guild/Server system** with multiple channels
-- **Direct messaging** between users
-- **File uploads** with image thumbnails
-- **Message reactions** and emoji support
-- **Typing indicators** and presence system
+## ✨ Features
 
-### Advanced Features
-- **Threads and replies** for organized discussions
-- **Voice channels** with mute/deafen controls
-- **Role-based permissions** with bitwise flags
-- **Search functionality** across messages, channels, guilds, and users
-- **Moderation tools** (kick, ban, timeout) with audit logs
-- **Bot management** with custom tokens
-- **Webhook system** for external integrations
+### 🎨 Modern Design
+- **Dark Theme** with beautiful gradients and glass morphism effects
+- **Responsive Design** that works on desktop, tablet, and mobile
+- **Smooth Animations** powered by Framer Motion
+- **Modern UI Components** with hover effects and transitions
 
-### UI/UX Features
-- **Modern dark theme** with Tailwind CSS
-- **Responsive design** for all devices
-- **Modal dialogs** and interactive components
-- **Progress bars** and loading states
-- **Tabbed interfaces** for organization
+### 💬 Real-time Messaging
+- **Instant Messaging** with WebSocket connections
+- **Message History** with date separators and timestamps
+- **Typing Indicators** to show when users are typing
+- **Message Actions** (edit, delete, reactions)
+- **File Sharing** support for images and documents
+
+### 🏠 Server Management
+- **Create Servers** with custom icons and descriptions
+- **Channel Categories** (Text, Voice, Announcements)
+- **Role Management** with custom permissions
+- **Member Management** with status indicators
+
+### 👥 User Features
+- **User Profiles** with avatars and status
+- **Online Status** indicators (Online, Idle, Do Not Disturb, Offline)
+- **Custom Status** messages
+- **Voice Channel** support with speaking indicators
+
+### 🔧 Developer Features
+- **Modern Tech Stack** (Next.js 14, TypeScript, Tailwind CSS)
+- **State Management** with Zustand
+- **Real-time Updates** with Socket.IO
+- **Type Safety** throughout the application
 
 ## 🛠️ Tech Stack
 
-### Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose ODM
-- **Redis** for caching and sessions
-- **Socket.IO** for real-time communication
-- **JWT** for authentication
-- **Multer** for file uploads
-- **Sharp** for image processing
-
 ### Frontend
-- **Next.js 13+** with App Router
-- **React** with TypeScript
-- **Tailwind CSS** for styling
-- **Zustand** for state management
-- **Socket.IO Client** for real-time updates
-- **Date-fns** for date formatting
+- **Next.js 14** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first CSS framework
+- **Framer Motion** - Animation library
+- **Lucide React** - Beautiful icons
+- **Zustand** - State management
+- **Socket.IO Client** - Real-time communication
 
-## 📦 Installation
+### Backend
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **Socket.IO** - Real-time communication
+- **MongoDB** - NoSQL database
+- **JWT** - Authentication
+- **bcrypt** - Password hashing
+
+## 🚀 Quick Start
 
 ### Prerequisites
 - Node.js 18+ 
-- MongoDB 5+
-- Redis 6+
-- npm or yarn
+- MongoDB
+- Git
 
-### Quick Start
+### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/yourusername/devonnight.git
    cd devonnight
    ```
 
 2. **Install dependencies**
    ```bash
-   npm run install:all
+   # Install backend dependencies
+   cd backend
+   npm install
+
+   # Install frontend dependencies
+   cd ../frontend
+   npm install
    ```
 
 3. **Set up environment variables**
-   
-   Create `.env` files in both `backend/` and `frontend/` directories:
-
-   **Backend (.env)**
-   ```env
-   NODE_ENV=development
+   ```bash
+   # Backend (.env)
    PORT=5000
    MONGODB_URI=mongodb://localhost:27017/devonnight
-   REDIS_URL=redis://localhost:6379
-   JWT_SECRET=your-super-secret-jwt-key
-   CORS_ORIGIN=http://localhost:3000
-   SOCKET_CORS_ORIGIN=http://localhost:3000
-   UPLOAD_PATH=../uploads
-   ```
+   JWT_SECRET=your-secret-key
+   JWT_REFRESH_SECRET=your-refresh-secret
 
-   **Frontend (.env.local)**
-   ```env
+   # Frontend (.env.local)
    NEXT_PUBLIC_API_URL=http://localhost:5000
    NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
    ```
 
-4. **Start the development servers**
+4. **Start MongoDB**
    ```bash
+   # Using Docker
+   docker run -d -p 27017:27017 --name mongodb mongo:latest
+
+   # Or using MongoDB locally
+   mongod
+   ```
+
+5. **Start the development servers**
+   ```bash
+   # Start backend (in one terminal)
+   cd backend
+   npm run dev
+
+   # Start frontend (in another terminal)
+   cd frontend
    npm run dev
    ```
 
-   This will start both backend (port 5000) and frontend (port 3000) simultaneously.
+6. **Open your browser**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:5000
 
-## 🏃‍♂️ Development
+## 📱 Usage
 
-### Available Scripts
+### Getting Started
+1. **Visit the landing page** at http://localhost:3000
+2. **Create an account** or sign in with existing credentials
+3. **Create your first server** using the "+" button
+4. **Invite friends** to your server
+5. **Start chatting** in text channels or join voice channels
 
-```bash
-# Development
-npm run dev                    # Start both backend and frontend
-npm run dev:backend           # Start only backend
-npm run dev:frontend          # Start only frontend
+### Features Guide
 
-# Production
-npm run build                 # Build both backend and frontend
-npm run start                 # Start production servers
+#### 🏠 Creating Servers
+- Click the "+" button in the server list
+- Choose a server name and description
+- Upload a custom server icon (optional)
+- Your server is ready!
 
-# Installation
-npm run install:all          # Install all dependencies
-npm run setup                # Install and build everything
-```
+#### 💬 Messaging
+- Select a text channel from the channel list
+- Type your message and press Enter
+- Use emojis, file attachments, and formatting
+- React to messages with emojis
+
+#### 🎤 Voice Channels
+- Click on a voice channel to join
+- Use the microphone button to speak
+- Mute/deafen yourself as needed
+- See who's speaking with visual indicators
+
+#### 👥 User Management
+- Click on user profiles to view details
+- Set custom status messages
+- Manage server roles and permissions
+- View online status and activity
+
+## 🎨 Design System
+
+### Color Palette
+- **Primary**: Purple gradient (#667eea to #764ba2)
+- **Background**: Dark slate (#0f0f23 to #16213e)
+- **Surface**: Glass morphism with blur effects
+- **Text**: White and gray variations
+
+### Components
+- **Glass Cards**: Semi-transparent with backdrop blur
+- **Gradient Buttons**: Purple gradients with hover effects
+- **Status Indicators**: Color-coded online status
+- **Message Bubbles**: Rounded with subtle gradients
+
+### Animations
+- **Page Transitions**: Smooth fade and slide effects
+- **Hover Effects**: Lift and glow animations
+- **Loading States**: Spinner and skeleton animations
+- **Typing Indicators**: Animated dots
+
+## 🔧 Development
 
 ### Project Structure
-
 ```
 devonnight/
-├── backend/                 # Node.js/Express backend
+├── backend/                 # Node.js/Express API
 │   ├── src/
-│   │   ├── controllers/    # API controllers
-│   │   ├── models/         # MongoDB models
+│   │   ├── controllers/    # Route controllers
+│   │   ├── middleware/     # Auth and validation
+│   │   ├── models/         # Database models
 │   │   ├── routes/         # API routes
-│   │   ├── middleware/     # Express middleware
-│   │   ├── socket/         # Socket.IO handlers
-│   │   ├── config/         # Database and Redis config
-│   │   └── utils/          # Utility functions
-│   └── uploads/            # File uploads directory
-├── frontend/               # Next.js frontend
+│   │   └── server.js       # Main server file
+│   └── package.json
+├── frontend/               # Next.js application
 │   ├── src/
-│   │   ├── app/           # Next.js app router
+│   │   ├── app/           # App Router pages
 │   │   ├── components/    # React components
 │   │   ├── stores/        # Zustand stores
-│   │   ├── lib/           # Utility functions
-│   │   └── types/         # TypeScript types
-│   └── public/            # Static assets
-└── package.json           # Root package.json
+│   │   ├── types/         # TypeScript types
+│   │   └── lib/           # Utilities and API
+│   └── package.json
+└── README.md
 ```
 
-## 🔧 Configuration
+### Key Components
 
-### Backend Configuration
+#### Frontend Components
+- `AppLayout` - Main application layout
+- `LandingPage` - Beautiful landing page
+- `ServerList` - Server navigation sidebar
+- `ChannelList` - Channel navigation
+- `MessageArea` - Chat interface
+- `UserList` - Member list
+- `UserProfile` - User dropdown menu
 
-The backend can be configured through environment variables:
+#### Backend API
+- `auth` - Authentication routes
+- `guilds` - Server management
+- `channels` - Channel management
+- `messages` - Message handling
+- `users` - User management
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PORT` | 5000 | Backend server port |
-| `MONGODB_URI` | - | MongoDB connection string |
-| `REDIS_URL` | - | Redis connection string |
-| `JWT_SECRET` | - | JWT signing secret |
-| `CORS_ORIGIN` | http://localhost:3000 | CORS allowed origin |
-| `UPLOAD_PATH` | ../uploads | File upload directory |
-
-### Frontend Configuration
-
-The frontend can be configured through environment variables:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `NEXT_PUBLIC_API_URL` | http://localhost:5000 | Backend API URL |
-| `NEXT_PUBLIC_SOCKET_URL` | http://localhost:5000 | Socket.IO server URL |
+### State Management
+- `authStore` - User authentication state
+- `guildStore` - Server and channel state
+- `messageStore` - Message state
+- `userStore` - User state
 
 ## 🚀 Deployment
 
-### Production Build
+### Backend Deployment
+```bash
+# Build for production
+cd backend
+npm run build
 
-1. **Build the application**
-   ```bash
-   npm run build
-   ```
-
-2. **Start production servers**
-   ```bash
-   npm start
-   ```
-
-### Docker Deployment
-
-Create a `docker-compose.yml` file:
-
-```yaml
-version: '3.8'
-services:
-  mongodb:
-    image: mongo:5
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-
-  redis:
-    image: redis:6-alpine
-    ports:
-      - "6379:6379"
-
-  backend:
-    build: ./backend
-    ports:
-      - "5000:5000"
-    environment:
-      - MONGODB_URI=mongodb://mongodb:27017/devonnight
-      - REDIS_URL=redis://redis:6379
-    depends_on:
-      - mongodb
-      - redis
-
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:5000
-    depends_on:
-      - backend
-
-volumes:
-  mongodb_data:
+# Start production server
+npm start
 ```
 
-## 📚 API Documentation
+### Frontend Deployment
+```bash
+# Build for production
+cd frontend
+npm run build
 
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
+# Start production server
+npm start
+```
 
-### Guilds
-- `GET /api/guilds` - Get user's guilds
-- `POST /api/guilds` - Create new guild
-- `GET /api/guilds/:id` - Get guild details
-- `GET /api/guilds/:id/members` - Get guild members
-
-### Channels
-- `GET /api/channels` - Get guild channels
-- `POST /api/channels` - Create new channel
-- `PUT /api/channels/:id` - Update channel
-- `DELETE /api/channels/:id` - Delete channel
-
-### Messages
-- `GET /api/messages/:channelId` - Get channel messages
-- `POST /api/messages` - Send message
-- `PUT /api/messages/:id` - Edit message
-- `DELETE /api/messages/:id` - Delete message
-
-### Voice
-- `POST /api/voice/channels/:id/join` - Join voice channel
-- `POST /api/voice/channels/:id/leave` - Leave voice channel
-- `GET /api/voice/channels/:id/participants` - Get voice participants
-
-### Moderation
-- `POST /api/moderation/kick` - Kick user
-- `POST /api/moderation/ban` - Ban user
-- `POST /api/moderation/timeout` - Timeout user
-- `GET /api/audit/guilds/:id/audit-logs` - Get audit logs
+### Environment Variables
+Make sure to set all required environment variables in production:
+- Database connection strings
+- JWT secrets
+- API URLs
+- CORS origins
 
 ## 🤝 Contributing
 
@@ -272,11 +265,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Inspired by Discord's design and functionality
-- Built with modern web technologies
-- Real-time communication powered by Socket.IO
-- Beautiful UI with Tailwind CSS
+- **Discord** for inspiration
+- **Next.js** team for the amazing framework
+- **Tailwind CSS** for the utility-first approach
+- **Framer Motion** for smooth animations
+- **Lucide** for beautiful icons
 
 ---
 
 **DevOnNight** - Where developers connect and collaborate! 🚀
+
+Made with ❤️ for the developer community
