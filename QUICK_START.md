@@ -1,114 +1,96 @@
-# 🚀 DevOnNight - Quick Start
+# 🚀 DevOnNight - Quick Start Guide
 
-## ⚡ Chạy nhanh (5 phút)
+## ⚡ Khởi động nhanh
 
-### 1. Clone và cài đặt
+### **Cách 1: Sử dụng script tự động (Khuyến nghị)**
 ```bash
-git clone <repository-url>
-cd devonnight
-chmod +x start.sh
-./start.sh
+# Khởi động backend
+./start-backend.sh
+
+# Trong terminal khác, khởi động frontend
+cd frontend && npm run dev
 ```
 
-### 2. Hoặc chạy thủ công
-
-#### Cài đặt dependencies:
+### **Cách 2: Khởi động thủ công**
 ```bash
-# Backend
-cd backend
-npm install
+# 1. Fix port conflict (nếu cần)
+./quick-fix.sh
 
-# Frontend  
-cd ../frontend
-npm install
+# 2. Khởi động backend
+cd backend && npm run dev
+
+# 3. Khởi động frontend (terminal khác)
+cd frontend && npm run dev
 ```
 
-#### Tạo file môi trường:
+### **Cách 3: Khởi động toàn bộ hệ thống**
 ```bash
-# Backend (.env)
-cp backend/.env.example backend/.env
-
-# Frontend (.env.local)  
-echo "NEXT_PUBLIC_API_URL=http://localhost:5000" > frontend/.env.local
-echo "NEXT_PUBLIC_SOCKET_URL=http://localhost:5000" >> frontend/.env.local
+./fix-port-conflict.sh
 ```
-
-#### Khởi động:
-```bash
-# Terminal 1 - Backend
-cd backend
-npm run dev
-
-# Terminal 2 - Frontend
-cd frontend  
-npm run dev
-```
-
-### 3. Truy cập ứng dụng
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:5000
-
-## 🐳 Docker (Khuyến nghị)
-
-```bash
-# Build và chạy
-docker-compose up -d
-
-# Xem logs
-docker-compose logs -f
-
-# Dừng
-docker-compose down
-```
-
-## 📋 Yêu cầu hệ thống
-
-- **Node.js** 18+
-- **npm** hoặc **yarn**
-- **MongoDB** 5+
-- **Redis** 6+
-- **Docker** (tùy chọn)
 
 ## 🔧 Troubleshooting
 
-### Lỗi thường gặp:
-
-**MongoDB không kết nối được:**
+### **Lỗi Port 5000 đã được sử dụng:**
 ```bash
-sudo systemctl start mongod
+./quick-fix.sh
 ```
 
-**Redis không kết nối được:**
+### **Lỗi MongoDB không chạy:**
 ```bash
-sudo systemctl start redis-server
+sudo docker run -d -p 27017:27017 --name mongodb mongo:6
 ```
 
-**Port đã được sử dụng:**
+### **Lỗi "Failed to fetch":**
+1. Kiểm tra backend có chạy không: `curl http://localhost:5000/health`
+2. Kiểm tra frontend có chạy không: `curl http://localhost:3000` hoặc `curl http://localhost:3001`
+3. Kiểm tra CORS configuration
+
+## 📋 Kiểm tra hệ thống
+
+### **Test Backend:**
 ```bash
-lsof -i :5000
-kill -9 <PID>
+# Health check
+curl http://localhost:5000/health
+
+# Test register
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"test","email":"test@example.com","password":"password123"}'
 ```
 
-**Dependencies lỗi:**
+### **Test Frontend:**
 ```bash
-rm -rf node_modules package-lock.json
-npm install
+# Kiểm tra frontend
+curl http://localhost:3000
+# hoặc
+curl http://localhost:3001
 ```
 
-## 📖 Tài liệu chi tiết
+## 🌐 Truy cập ứng dụng
 
-Xem file `DEPLOYMENT_GUIDE.md` để biết hướng dẫn chi tiết về:
-- Cài đặt từng bước
-- Cấu hình production
-- Deploy lên cloud
-- Monitoring và security
+- **Frontend**: http://localhost:3000 (hoặc 3001)
+- **Backend API**: http://localhost:5000
+- **MongoDB**: localhost:27017
 
-## 🆘 Hỗ trợ
+## 🛑 Dừng hệ thống
+
+```bash
+# Kill backend
+pkill -f "nodemon"
+
+# Kill frontend
+pkill -f "next"
+
+# Stop MongoDB
+sudo docker stop mongodb
+```
+
+## 📞 Hỗ trợ
 
 Nếu gặp vấn đề:
-1. Kiểm tra logs
-2. Xem troubleshooting section
-3. Tạo issue trên GitHub
+1. Xem `TROUBLESHOOTING.md` để biết chi tiết
+2. Xem `PORT_CONFLICT_FIX.md` nếu gặp lỗi port
+3. Chạy `./check-errors.sh` để kiểm tra lỗi
 
 ---
 
