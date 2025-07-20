@@ -24,7 +24,9 @@
     "nodemailer": "^6.9.4",
     "express-rate-limit": "^6.10.0",
     "helmet": "^7.0.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "sharp": "^0.32.6",
+    "crypto": "^1.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1",
