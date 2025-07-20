@@ -208,6 +208,116 @@ const socketHandler = (io) => {
       }
     });
 
+    // Handle voice mute/unmute
+    socket.on('VOICE_MUTE', async (data) => {
+      try {
+        const { channelId, muted } = data;
+        const userId = socket.userId;
+
+        socket.to(`voice:${channelId}`).emit('VOICE_USER_MUTE', {
+          channelId,
+          userId,
+          username: socket.user.username,
+          muted
+        });
+      } catch (error) {
+        console.error('Voice mute error:', error);
+      }
+    });
+
+    // Handle voice deafen/undeafen
+    socket.on('VOICE_DEAFEN', async (data) => {
+      try {
+        const { channelId, deafened } = data;
+        const userId = socket.userId;
+
+        socket.to(`voice:${channelId}`).emit('VOICE_USER_DEAFEN', {
+          channelId,
+          userId,
+          username: socket.user.username,
+          deafened
+        });
+      } catch (error) {
+        console.error('Voice deafen error:', error);
+      }
+    });
+
+    // Handle voice speaking
+    socket.on('VOICE_SPEAKING', async (data) => {
+      try {
+        const { channelId, speaking } = data;
+        const userId = socket.userId;
+
+        socket.to(`voice:${channelId}`).emit('VOICE_USER_SPEAKING', {
+          channelId,
+          userId,
+          username: socket.user.username,
+          speaking
+        });
+      } catch (error) {
+        console.error('Voice speaking error:', error);
+      }
+    });
+
+    // Handle voice streaming
+    socket.on('VOICE_STREAMING', async (data) => {
+      try {
+        const { channelId, streaming } = data;
+        const userId = socket.userId;
+
+        socket.to(`voice:${channelId}`).emit('VOICE_USER_STREAMING', {
+          channelId,
+          userId,
+          username: socket.user.username,
+          streaming
+        });
+      } catch (error) {
+        console.error('Voice streaming error:', error);
+      }
+    });
+
+    // Handle voice video
+    socket.on('VOICE_VIDEO', async (data) => {
+      try {
+        const { channelId, videoEnabled } = data;
+        const userId = socket.userId;
+
+        socket.to(`voice:${channelId}`).emit('VOICE_USER_VIDEO', {
+          channelId,
+          userId,
+          username: socket.user.username,
+          videoEnabled
+        });
+      } catch (error) {
+        console.error('Voice video error:', error);
+      }
+    });
+
+    // Handle voice move
+    socket.on('VOICE_MOVE', async (data) => {
+      try {
+        const { channelId, targetChannelId } = data;
+        const userId = socket.userId;
+
+        socket.leave(`voice:${channelId}`);
+        socket.join(`voice:${targetChannelId}`);
+        
+        socket.to(`voice:${channelId}`).emit('VOICE_USER_LEFT', {
+          channelId,
+          userId,
+          username: socket.user.username
+        });
+        
+        socket.to(`voice:${targetChannelId}`).emit('VOICE_USER_JOINED', {
+          channelId: targetChannelId,
+          userId,
+          username: socket.user.username
+        });
+      } catch (error) {
+        console.error('Voice move error:', error);
+      }
+    });
+
     // Handle heartbeat
     socket.on('HEARTBEAT', () => {
       socket.emit('HEARTBEAT_ACK');

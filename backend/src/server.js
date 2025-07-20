@@ -24,6 +24,10 @@ const roleRoutes = require('./routes/roles');
 const searchRoutes = require('./routes/search');
 const threadRoutes = require('./routes/threads');
 const moderationRoutes = require('./routes/moderation');
+const botRoutes = require('./routes/bots');
+const webhookRoutes = require('./routes/webhooks');
+const auditRoutes = require('./routes/audit');
+const voiceRoutes = require('./routes/voice');
 
 // Import socket handlers
 const socketHandler = require('./socket');
@@ -76,6 +80,10 @@ app.use('/api/roles', roleRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/threads', threadRoutes);
 app.use('/api/moderation', moderationRoutes);
+app.use('/api/bots', botRoutes);
+app.use('/api/webhooks', webhookRoutes);
+app.use('/api/audit', auditRoutes);
+app.use('/api/voice', voiceRoutes);
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
