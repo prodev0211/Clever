@@ -29,12 +29,15 @@ sudo systemctl start mongod
 #### 4. **Port Conflicts**
 ```bash
 # Kiểm tra port đang sử dụng
-lsof -i :3000
-lsof -i :3001
-lsof -i :5000
+ss -tulpn | grep :5000
+ss -tulpn | grep :3000
+ss -tulpn | grep :3001
 
 # Kill process nếu cần
 kill -9 <PID>
+
+# Hoặc sử dụng script tự động
+./fix-port-conflict.sh
 ```
 
 #### 5. **Environment Variables**
