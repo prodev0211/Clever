@@ -86,7 +86,7 @@ export function MessageList({ channelId }: MessageListProps) {
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
       {messages.map((message) => (
-        <MessageItem key={message.id} message={message} />
+        <MessageItem key={message.id} message={message} channelId={channelId} />
       ))}
       <div ref={messagesEndRef} />
     </div>
@@ -95,9 +95,10 @@ export function MessageList({ channelId }: MessageListProps) {
 
 interface MessageItemProps {
   message: Message;
+  channelId: string;
 }
 
-function MessageItem({ message }: MessageItemProps) {
+function MessageItem({ message, channelId }: MessageItemProps) {
   const isEdited = message.editedTimestamp && message.editedTimestamp !== message.createdAt;
 
   return (
@@ -136,9 +137,9 @@ function MessageItem({ message }: MessageItemProps) {
           </button>
         </div>
         {/* ReplyList, ReplyInput, ThreadCreate */}
-        <ReplyList channelId={message.channelId} messageId={message.id} />
-        <ReplyInput channelId={message.channelId} messageId={message.id} />
-        <ThreadCreate channelId={message.channelId} messageId={message.id} />
+        <ReplyList channelId={channelId} messageId={message.id} />
+        <ReplyInput channelId={channelId} messageId={message.id} />
+        <ThreadCreate channelId={channelId} messageId={message.id} />
       </div>
     </div>
   );

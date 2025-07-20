@@ -4,8 +4,16 @@ import { useState, useRef } from 'react';
 import { api } from '@/lib/api';
 
 interface FileUploadProps {
-  onFilesUploaded: (attachments: any[]) => void;
+  onFilesUploaded: (attachments: FileAttachment[]) => void;
   onClose: () => void;
+}
+
+interface FileAttachment {
+  id: string;
+  filename: string;
+  url: string;
+  size: number;
+  type: string;
 }
 
 export function FileUpload({ onFilesUploaded, onClose }: FileUploadProps) {

@@ -1,25 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const botController = require('../controllers/botController');
-const { authenticateToken } = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 const { checkGuildPermission } = require('../middleware/permissions');
 
 // Get all bots for a guild
-router.get('/guilds/:guildId/bots', authenticateToken, checkGuildPermission('MANAGE_GUILD'), botController.getGuildBots);
+router.get('/guilds/:guildId/bots', auth, checkGuildPermission('MANAGE_GUILD'), botController.getGuildBots);
 
 // Create a new bot
-router.post('/guilds/:guildId/bots', authenticateToken, checkGuildPermission('MANAGE_GUILD'), botController.createBot);
+router.post('/guilds/:guildId/bots', auth, checkGuildPermission('MANAGE_GUILD'), botController.createBot);
 
 // Get bot by ID
-router.get('/bots/:botId', authenticateToken, botController.getBot);
+router.get('/bots/:botId', auth, botController.getBot);
 
 // Update bot
-router.put('/bots/:botId', authenticateToken, checkGuildPermission('MANAGE_GUILD'), botController.updateBot);
+router.put('/bots/:botId', auth, checkGuildPermission('MANAGE_GUILD'), botController.updateBot);
 
 // Delete bot
-router.delete('/bots/:botId', authenticateToken, checkGuildPermission('MANAGE_GUILD'), botController.deleteBot);
+router.delete('/bots/:botId', auth, checkGuildPermission('MANAGE_GUILD'), botController.deleteBot);
 
 // Regenerate bot token
-router.post('/bots/:botId/regenerate-token', authenticateToken, checkGuildPermission('MANAGE_GUILD'), botController.regenerateToken);
+router.post('/bots/:botId/regenerate-token', auth, checkGuildPermission('MANAGE_GUILD'), botController.regenerateToken);
 
 module.exports = router;

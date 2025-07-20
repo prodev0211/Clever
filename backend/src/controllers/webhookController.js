@@ -23,7 +23,7 @@ exports.createWebhook = async (req, res) => {
   try {
     const { guildId } = req.params;
     const { name, channelId, avatar } = req.body;
-    const userId = req.user.id;
+    const userId = req.user._id;
     
     // Generate webhook URL
     const webhookId = crypto.randomBytes(16).toString('hex');
@@ -119,7 +119,7 @@ exports.executeWebhook = async (req, res) => {
     const { webhookId } = req.params;
     const { content, embeds, username, avatar_url } = req.body;
     
-    const webhook = await Webhook.findOne({ webhookId });
+    const webhook = await Webhook.findById(webhookId);
     if (!webhook || !webhook.isActive) {
       return res.status(404).json({ error: 'Webhook not found or inactive' });
     }

@@ -23,8 +23,10 @@ export function ModerationActions({ guildId, userId }: ModerationActionsProps) {
         await api.post(`/moderation/${guildId}/${userId}/${action}`);
       }
       alert(`${action} success!`);
-    } catch (e: any) {
-      setError(e.response?.data?.error || 'Failed to moderate');
+    } catch (e: unknown) {
+      const error = e as Error;
+      console.error('Moderation action failed:', error.message);
+      setError(error.message || 'Failed to moderate');
     } finally {
       setLoading(false);
     }

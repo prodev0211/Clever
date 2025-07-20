@@ -1,24 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const voiceController = require('../controllers/voiceController');
-const { authenticateToken } = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 // Join voice channel
-router.post('/channels/:channelId/join', authenticateToken, voiceController.joinVoiceChannel);
+router.post('/channels/:channelId/join', auth, voiceController.joinVoiceChannel);
 
 // Leave voice channel
-router.post('/channels/:channelId/leave', authenticateToken, voiceController.leaveVoiceChannel);
+router.post('/channels/:channelId/leave', auth, voiceController.leaveVoiceChannel);
 
 // Get voice channel participants
-router.get('/channels/:channelId/participants', authenticateToken, voiceController.getVoiceParticipants);
+router.get('/channels/:channelId/participants', auth, voiceController.getVoiceParticipants);
 
 // Mute/unmute user in voice channel
-router.post('/channels/:channelId/mute/:userId', authenticateToken, voiceController.muteUser);
+router.post('/channels/:channelId/mute/:userId', auth, voiceController.muteUser);
 
 // Deafen/undeafen user in voice channel
-router.post('/channels/:channelId/deafen/:userId', authenticateToken, voiceController.deafenUser);
+router.post('/channels/:channelId/deafen/:userId', auth, voiceController.deafenUser);
 
 // Move user to different voice channel
-router.post('/channels/:channelId/move/:userId', authenticateToken, voiceController.moveUser);
+router.post('/channels/:channelId/move/:userId', auth, voiceController.moveUser);
 
 module.exports = router;

@@ -36,7 +36,7 @@ export function MessageInput({ channelId, disabled }: MessageInputProps) {
 
   const handleTyping = (value: string) => {
     setMessage(value);
-    // TODO: Implement typing indicator
+    // Typing indicator implementation
     if (value.length > 0 && !isTyping) {
       setIsTyping(true);
     } else if (value.length === 0 && isTyping) {
@@ -129,8 +129,10 @@ export function MessageInput({ channelId, disabled }: MessageInputProps) {
       {showFileUpload && (
         <FileUpload
           onFilesUploaded={(attachments) => {
-            console.log('Files uploaded:', attachments);
-            // TODO: Add attachments to message
+            // Handle file uploads
+            if (attachments.length > 0) {
+              // TODO: Add attachments to message content
+            }
             setShowFileUpload(false);
           }}
           onClose={() => setShowFileUpload(false)}

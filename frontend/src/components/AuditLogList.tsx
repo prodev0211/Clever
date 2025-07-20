@@ -5,12 +5,12 @@ import { api } from '@/lib/api';
 import { formatDistanceToNow } from 'date-fns';
 
 interface AuditLog {
-  _id: string;
+  id: string;
   actionType: string;
-  targetId: string;
-  targetType: string;
-  userId: string;
-  changes?: any;
+  executorId: string;
+  targetId?: string;
+  guildId: string;
+  changes?: Record<string, unknown>;
   reason?: string;
   createdAt: string;
 }

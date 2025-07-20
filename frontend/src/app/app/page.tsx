@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/stores/authStore';
-import { useGuildStore } from '@/stores/guildStore';
-import { useChannelStore } from '@/stores/channelStore';
+import { useGuildStore, Guild } from '@/stores/guildStore';
+import { useChannelStore, Channel } from '@/stores/channelStore';
 import { GuildList } from '@/components/GuildList';
 import { ChannelList } from '@/components/ChannelList';
 import { MessageList } from '@/components/MessageList';
@@ -24,14 +24,14 @@ export default function AppPage() {
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [userPanelTab, setUserPanelTab] = useState<'members' | 'admin' | 'dms'>('members');
 
-  const handleGuildSelect = (guild: any) => {
+  const handleGuildSelect = (guild: Guild | null) => {
     setSelectedGuildId(guild?.id || null);
     setCurrentGuild(guild);
     setSelectedChannelId(null);
     setCurrentChannel(null);
   };
 
-  const handleChannelSelect = (channel: any) => {
+  const handleChannelSelect = (channel: Channel | null) => {
     setSelectedChannelId(channel?.id || null);
     setCurrentChannel(channel);
   };

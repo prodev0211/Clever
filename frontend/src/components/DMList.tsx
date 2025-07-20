@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDMStore } from '@/stores/dmStore';
+import { useAuthStore } from '@/stores/authStore';
 import { Avatar } from '@/components/ui/Avatar';
 import { formatDistanceToNow } from 'date-fns';
+import { DM } from '@/types/dm';
 
 export function DMList() {
   const { dms, selectedDM, loading, fetchDMs, selectDM } = useDMStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     fetchDMs();
@@ -44,7 +47,7 @@ export function DMList() {
           <div className="space-y-1">
             {dms.map((dm) => {
               const isSelected = selectedDM?.id === dm.id;
-              const otherParticipant = dm.participants.find(p => p.id !== 'current-user-id'); // TODO: Get current user ID
+              const otherParticipant = dm.participants.find(p => p.id !== user?.id);
               const displayName = dm.isGroup ? dm.name : (otherParticipant?.username || 'Unknown User');
               const avatar = dm.isGroup ? dm.icon : otherParticipant?.avatar;
               

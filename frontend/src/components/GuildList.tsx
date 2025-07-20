@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useGuildStore } from '@/stores/guildStore';
+import { Guild } from '@/stores/guildStore';
 import { Avatar } from '@/components/ui/Avatar';
 import { cn } from '@/lib/utils';
 import { CreateGuildModal } from './CreateGuildModal';
 
 interface GuildListProps {
-  onGuildSelect?: (guild: any) => void;
-  selectedGuildId?: string;
+  onGuildSelect?: (guild: Guild | null) => void;
+  selectedGuildId?: string | null;
 }
 
 export function GuildList({ onGuildSelect, selectedGuildId }: GuildListProps) {

@@ -24,7 +24,7 @@ exports.createBot = async (req, res) => {
   try {
     const { guildId } = req.params;
     const { name, description, permissions } = req.body;
-    const userId = req.user.id;
+    const userId = req.user._id;
     
     // Generate bot token
     const token = crypto.randomBytes(32).toString('hex');

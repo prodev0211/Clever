@@ -5,7 +5,7 @@ const Channel = require('../models/Channel');
 exports.joinVoiceChannel = async (req, res) => {
   try {
     const { channelId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user._id;
     
     // Check if channel exists and is voice channel
     const channel = await Channel.findById(channelId);
@@ -54,7 +54,7 @@ exports.joinVoiceChannel = async (req, res) => {
 exports.leaveVoiceChannel = async (req, res) => {
   try {
     const { channelId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user._id;
     
     const participant = await VoiceParticipant.findOneAndDelete({
       userId,
