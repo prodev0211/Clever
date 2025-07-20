@@ -58,11 +58,11 @@ export const useGuildStore = create<GuildState>((set, get) => ({
   fetchUserGuilds: async () => {
     try {
       set({ loading: true, error: null });
-      const response = await api.get('/guilds');
-      set({ guilds: response.data.guilds, loading: false });
+      const response = await api.getGuilds();
+      set({ guilds: response.guilds, loading: false });
     } catch (error: any) {
       set({ 
-        error: error.response?.data?.error || 'Failed to fetch guilds', 
+        error: error.message || 'Failed to fetch guilds', 
         loading: false 
       });
     }
@@ -71,8 +71,8 @@ export const useGuildStore = create<GuildState>((set, get) => ({
   createGuild: async (name: string, description?: string) => {
     try {
       set({ loading: true, error: null });
-      const response = await api.post('/guilds', { name, description });
-      const newGuild = response.data.guild;
+      const response = await api.createGuild({ name, description });
+      const newGuild = response.guild;
       
       set(state => ({
         guilds: [...state.guilds, newGuild],
@@ -82,7 +82,7 @@ export const useGuildStore = create<GuildState>((set, get) => ({
       return newGuild;
     } catch (error: any) {
       set({ 
-        error: error.response?.data?.error || 'Failed to create guild', 
+        error: error.message || 'Failed to create guild', 
         loading: false 
       });
       throw error;
@@ -92,14 +92,14 @@ export const useGuildStore = create<GuildState>((set, get) => ({
   getGuild: async (guildId: string) => {
     try {
       set({ loading: true, error: null });
-      const response = await api.get(`/guilds/${guildId}`);
-      const guild = response.data.guild;
+      const response = await api.getGuild(guildId);
+      const guild = response.guild;
       
       set({ currentGuild: guild, loading: false });
       return guild;
     } catch (error: any) {
       set({ 
-        error: error.response?.data?.error || 'Failed to get guild', 
+        error: error.message || 'Failed to get guild', 
         loading: false 
       });
       throw error;
@@ -109,7 +109,7 @@ export const useGuildStore = create<GuildState>((set, get) => ({
   updateGuild: async (guildId: string, data: Partial<Guild>) => {
     try {
       set({ loading: true, error: null });
-      await api.put(`/guilds/${guildId}`, data);
+      await api.updateGuild(guildId, data);
       
       set(state => ({
         guilds: state.guilds.map(guild => 
@@ -122,7 +122,7 @@ export const useGuildStore = create<GuildState>((set, get) => ({
       }));
     } catch (error: any) {
       set({ 
-        error: error.response?.data?.error || 'Failed to update guild', 
+        error: error.message || 'Failed to update guild', 
         loading: false 
       });
       throw error;
@@ -132,7 +132,7 @@ export const useGuildStore = create<GuildState>((set, get) => ({
   deleteGuild: async (guildId: string) => {
     try {
       set({ loading: true, error: null });
-      await api.delete(`/guilds/${guildId}`);
+      await api.deleteGuild(guildId);
       
       set(state => ({
         guilds: state.guilds.filter(guild => guild.id !== guildId),
@@ -141,7 +141,7 @@ export const useGuildStore = create<GuildState>((set, get) => ({
       }));
     } catch (error: any) {
       set({ 
-        error: error.response?.data?.error || 'Failed to delete guild', 
+        error: error.message || 'Failed to delete guild', 
         loading: false 
       });
       throw error;
@@ -151,7 +151,7 @@ export const useGuildStore = create<GuildState>((set, get) => ({
   leaveGuild: async (guildId: string) => {
     try {
       set({ loading: true, error: null });
-      await api.post(`/guilds/${guildId}/leave`);
+      await api.leaveGuild(guildId);
       
       set(state => ({
         guilds: state.guilds.filter(guild => guild.id !== guildId),
@@ -160,7 +160,7 @@ export const useGuildStore = create<GuildState>((set, get) => ({
       }));
     } catch (error: any) {
       set({ 
-        error: error.response?.data?.error || 'Failed to leave guild', 
+        error: error.message || 'Failed to leave guild', 
         loading: false 
       });
       throw error;
@@ -170,13 +170,13 @@ export const useGuildStore = create<GuildState>((set, get) => ({
   getGuildMembers: async (guildId: string) => {
     try {
       set({ loading: true, error: null });
-      const response = await api.get(`/guilds/${guildId}/members`);
+      const response = await api.getGuildMembers(guildId);
       
-      set({ guildMembers: response.data.members, loading: false });
-      return response.data.members;
+      set({ guildMembers: response.members, loading: false });
+      return response.members;
     } catch (error: any) {
       set({ 
-        error: error.response?.data?.error || 'Failed to get guild members', 
+        error: error.message || 'Failed to get guild members', 
         loading: false 
       });
       throw error;

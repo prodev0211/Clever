@@ -180,6 +180,53 @@ class ApiClient {
     if (typeof window === 'undefined') return;
     localStorage.removeItem('user');
   }
+
+  // Guilds endpoints
+  async getGuilds(): Promise<{ guilds: any[] }> {
+    return await this.request<{ guilds: any[] }>('/api/guilds');
+  }
+
+  async getGuild(guildId: string): Promise<{ guild: any }> {
+    return await this.request<{ guild: any }>(`/api/guilds/${guildId}`);
+  }
+
+  async createGuild(data: {
+    name: string;
+    description?: string;
+    icon?: string;
+  }): Promise<{ message: string; guild: any }> {
+    return await this.request<{ message: string; guild: any }>('/api/guilds', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateGuild(guildId: string, data: {
+    name?: string;
+    description?: string;
+    icon?: string;
+  }): Promise<{ message: string; guild: any }> {
+    return await this.request<{ message: string; guild: any }>(`/api/guilds/${guildId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteGuild(guildId: string): Promise<{ message: string }> {
+    return await this.request<{ message: string }>(`/api/guilds/${guildId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async leaveGuild(guildId: string): Promise<{ message: string }> {
+    return await this.request<{ message: string }>(`/api/guilds/${guildId}/leave`, {
+      method: 'POST',
+    });
+  }
+
+  async getGuildMembers(guildId: string): Promise<{ members: any[] }> {
+    return await this.request<{ members: any[] }>(`/api/guilds/${guildId}/members`);
+  }
 }
 
 export const apiClient = new ApiClient(API_BASE_URL);
