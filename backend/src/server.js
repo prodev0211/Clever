@@ -30,7 +30,7 @@ const auditRoutes = require('./routes/audit');
 const voiceRoutes = require('./routes/voice');
 
 // Import socket handlers
-const socketHandler = require('./socket');
+const socketHandler = require('./socket/index');
 
 const app = express();
 const server = http.createServer(app);
