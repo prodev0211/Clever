@@ -19,8 +19,10 @@ export function ReplyInput({ channelId, messageId }: ReplyInputProps) {
     try {
       await replyToMessage(channelId, messageId, content.trim());
       setContent('');
-    } catch (e) {
-      // TODO: Show error
+    } catch (error) {
+      // Show error
+      console.error('Failed to send reply:', error);
+      setError('Failed to send reply');
     } finally {
       setLoading(false);
     }

@@ -12,7 +12,12 @@ interface ReplyListProps {
 
 export function ReplyList({ channelId, messageId }: ReplyListProps) {
   const { replies, setReplies } = useThreadStore();
-  // TODO: Fetch replies from API if needed
+  useEffect(() => {
+    // Fetch replies from API if needed
+    if (messageId) {
+      // TODO: Implement reply fetching
+    }
+  }, [messageId]);
 
   const replyList = replies[messageId] || [];
 

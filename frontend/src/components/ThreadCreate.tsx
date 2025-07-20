@@ -19,8 +19,10 @@ export function ThreadCreate({ channelId, messageId }: ThreadCreateProps) {
     try {
       await createThread(channelId, messageId, name.trim());
       setName('');
-    } catch (e) {
-      // TODO: Show error
+    } catch (error) {
+      // Show error
+      console.error('Failed to create thread:', error);
+      setError('Failed to create thread');
     } finally {
       setLoading(false);
     }

@@ -9,7 +9,12 @@ interface ThreadListProps {
 
 export function ThreadList({ channelId }: ThreadListProps) {
   const { threads } = useThreadStore();
-  // TODO: Fetch threads from API if needed
+  useEffect(() => {
+    // Fetch threads from API if needed
+    if (channelId) {
+      // TODO: Implement thread fetching
+    }
+  }, [channelId]);
   const threadList = threads.filter(t => t.parentId === channelId);
 
   if (threadList.length === 0) return null;
